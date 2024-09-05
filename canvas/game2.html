@@ -19,7 +19,7 @@ var myScore;
 function startGame() {
     character2 = new gameObject(30, 30, "red", 10, 120);
     myGamePiece = new gameObject(30, 30, "yellow", 20, 150);
-    //myGamePiece.gravity = 0.05;
+    myGamePiece.gravity = 0.05;
     myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
 }
@@ -154,6 +154,7 @@ function updateGameArea() {
     myScore.update();
     myGamePiece.newPos();
     myGamePiece.update();
+    character2.update();
 }
 
 function everyinterval(n) {
@@ -166,8 +167,9 @@ function accelerate(n) {
 }
 </script>
 <br>
-<!--<button onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.05)">ACCELERATE</button>-->
+<button onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.05)">ACCELERATE</button>
 <p>Use the arrow keys to move through the obstacles</p>
 <p>How long can you stay alive?</p>
+<button onclick="startgame()"> Start Game </button>
 </body>
 </html>
