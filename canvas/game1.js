@@ -3,8 +3,7 @@ var myObstacles = [];
 var myScore;
 
 function startGame() {
-    character2 = new gameObject(30, 30, "red", 10, 120);
-    myGamePiece = new gameObject(30, 30, "yellow", 20, 150);
+    myGamePiece = new gameObject(30, 30, "purple", 20, 150);
     //myGamePiece.gravity = 0.05;
     myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
