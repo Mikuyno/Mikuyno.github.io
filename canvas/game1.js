@@ -3,7 +3,7 @@ var myObstacles = [];
 var myScore;
 
 function startGame() {
-    myGamePiece = new gameObject(30, 30, "purple", 20, 150);
+    myGamePiece = new gameObject(30, 30, "red", 20, 150);
     //myGamePiece.gravity = 0.05;
     myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
@@ -25,10 +25,10 @@ var myGameArea = {
         window.addEventListener("keydown", function(pressed)
         {
             myGameArea.key = pressed.keyCode;
-        }); //Function obtains keycode of the current pressed down key and gives it to myGameArea.key
+        });
         window.addEventListener("keyup", function(pressed){
             myGameArea.key = false;
-        }); //Function checks if key is no longer pressed down. If no longer pressed down gives myGameArea.key a value of "false"
+        });
         },
 
     clear : function() {
@@ -89,28 +89,27 @@ function gameObject(width, height, color, x, y, type) {
 }
 
 function updateGameArea() {
-    if (myGameArea.key == false) //checks if myGameArea.key is false and if it is sets speed of game object to 0 so gamePiece does not move without input
+    if (myGameArea.key == false)
     {
         myGamePiece.speedX=0;
         myGamePiece.speedY=0;
     }
-    else //Switch structure skipped if key is not pressed
+    else{
+    switch (myGameArea.key)
     {
-        switch (myGameArea.key) //Switch structure reads myGameArea.key and if it reads that an arrow key is pressed, the corresponding case is invoked
-        {
-            case 37: //left
-                myGamePiece.speedX = -2;
-                break;
-            case 38: //up
-                myGamePiece.speedY = -2;
-                break;
-            case 39: //right
-                myGamePiece.speedX = 2;
-                break;
-            case 40: //down
-                myGamePiece.speedY = 2;
-                break;
-        }
+        case 37:
+            myGamePiece.speedX = -2;
+            break;
+        case 38:
+            myGamePiece.speedY = -2;
+            break;
+        case 39:
+            myGamePiece.speedX = 2;
+            break;
+        case 40:
+            myGamePiece.speedY = 2;
+            break;
+    }
     }
     var x, height, gap, minHeight, maxHeight, minGap, maxGap;
     for (i = 0; i < myObstacles.length; i += 1) {
