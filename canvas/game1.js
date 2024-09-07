@@ -2,6 +2,10 @@ var myGamePiece;
 var myObstacles = [];
 var myScore;
 
+document.addEventListener("DOMContentLoaded", function() {
+    hit_sound = document.getElementById("hit_audio");
+});
+
 function startGame() {
     myGamePiece = new gameObject(30, 30, "red", 20, 150);
     //myGamePiece.gravity = 0.05;
@@ -30,6 +34,11 @@ var myGameArea = {
             myGameArea.key = false;
         });
         },
+
+    stopGame : function()
+    {
+        clearInterval(this.interval);
+    },
 
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -110,10 +119,14 @@ function updateGameArea() {
             myGamePiece.speedY = 2;
             break;
     }
+
     }
     var x, height, gap, minHeight, maxHeight, minGap, maxGap;
     for (i = 0; i < myObstacles.length; i += 1) {
-        if (myGamePiece.crashWith(myObstacles[i])) {
+        if (myGamePiece.crashWith(myObstacles[i]))
+        {
+            hit_sound.play();
+            myGameArea.stopGame();
             return;
         } 
     }
