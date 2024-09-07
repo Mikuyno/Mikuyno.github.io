@@ -7,5 +7,16 @@
   <p> I used a switch structure and an if statement to take eventreader's keycodes and access if they read an arrrow key or read that a key was unpressed</p>
   <img src="Arrowcontrols1.png"> </img>
   <img src="Arrowcontrols2.png"> </img>
+  <p> For the sound effects, I first declared them in the src of the audio html tag and gave them ids to be accessed by javascript</p>
+  <p> For the start button html I set an event to trigger my "click_start" function on click</p>
+  <img src="Audio and start button.png"></img>
+  <p> In javascript for the button audio I made a function to start the game and play a sound effect when the button is clicked by storing the id of the audio I declared in a variable and using the play() function</p>
+  <img src="click start function"></img>
+  <p> For the Obstacle audio, I set an event listener to immedietly store the id of the hit sound effect in the variable hit_audio. <br>
+  Then I put the play function for this audio inside the if statement checking if an obsticle has been hit.</p>
+  <img src="EventListenCreateAudio(Obstacle).png"></img>
+  <img src="AddAudio(obstacle)+StopGame.png"></img>
+  <p>However, I realized the audio would play forever if an object was hit. So I added a StopGame function into the GameArea to clear the interval so the game would stop and added it into the if statement (seen above)</p>
+  <img src="StopGame.png"></img>
 </body>
 </html>
