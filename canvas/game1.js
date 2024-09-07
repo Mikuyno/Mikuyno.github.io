@@ -148,3 +148,10 @@ function everyinterval(n) {
 function accelerate(n) {
     myGamePiece.gravity = n;
 }
+
+function click_start()
+{
+    const start_sound = document.getElementById("start_audio");
+    start_sound.play();
+    startGame();
+}
