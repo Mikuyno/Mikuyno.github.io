@@ -18,5 +18,16 @@
   <img src="AddAudio(obstacle)+StopGame.png"></img>
   <p>However, I realized the audio would play forever if an object was hit. So I added a StopGame function into the GameArea to clear the interval so the game would stop and added it into the if statement (seen above)</p>
   <img src="StopGame.png"></img>
+  <p>After this I worked on a pause/continue button which was actually very simple. just set up a boolean variable and change its value via a function when the button is pressed. Then use an if statement to return from updating the game area if the pause button gets clicked and to resume if clicked again</p>
+  <img src="PauseVar.png"></img>
+  <img src="PauseFunc.png"></img>
+  <img src="PauseButton.png"></img>
+  <img src="PauseAdd.png"></img>
+  <p>Finally to finish off the base requirements of the game enhancement, I changed the bars to images of poles and gave the gamepiece a beginner animation to swap between 5 states depending on arrow key pressed by inserting the change into the switch and if statement I set up for arrow controls. I created a function in the game area to draw the image and also changed the update function to reflect this. However I noted a hitbox issue as the character was now a circle not a square.</p>
+  <img src="CharacterReplace.png"></img>
+  <img src="ObstacleChange.png"></img>
+  <img src="DrawImage.png"></img>
+  <img src="DrawImage2.png"></img>
+  <img src="TriggerChange.png"></img>
 </body>
 </html>
