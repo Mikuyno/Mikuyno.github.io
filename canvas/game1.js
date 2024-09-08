@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function startGame() {
-    myGamePiece = new gameObject(30, 30, "red", 20, 150);
+    myGamePiece = new gameObject(30, 30, "./game1assets/no-arrow.png", 20, 150,"image");
     //myGamePiece.gravity = 0.05;
     myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
@@ -49,6 +49,13 @@ var myGameArea = {
 
 function gameObject(width, height, color, x, y, type) {
     this.type = type;
+    if (this.type == "image")
+    {
+        this.image = new Image();
+        this.image.src = color;
+    }
+ 
+
     this.score = 0;
     this.width = width;
     this.height = height;
@@ -64,7 +71,19 @@ function gameObject(width, height, color, x, y, type) {
             ctx.font = this.width + " " + this.height;
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
-        } else {
+        
+        } 
+        else if (this.type == "image")
+        {
+            ctx.drawImage(this.image,
+                this.x,
+                this.y,
+                this.width,
+                this.height
+            );
+        }
+        else 
+        {
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
@@ -109,21 +128,26 @@ function updateGameArea() {
     {
         myGamePiece.speedX=0;
         myGamePiece.speedY=0;
+        myGamePiece.image.src = "./game1assets/no-arrow.png";
     }
     else{
     switch (myGameArea.key)
     {
         case 37:
             myGamePiece.speedX = -2;
+            myGamePiece.image.src = "./game1assets/left-arrow.png";
             break;
         case 38:
             myGamePiece.speedY = -2;
+            myGamePiece.image.src = "./game1assets/up-arrow.png";
             break;
         case 39:
             myGamePiece.speedX = 2;
+            myGamePiece.image.src = "./game1assets/right-arrow.png";
             break;
         case 40:
             myGamePiece.speedY = 2;
+            myGamePiece.image.src = "./game1assets/down-arrow.png";
             break;
     }
 
@@ -147,8 +171,8 @@ function updateGameArea() {
         minGap = 50;
         maxGap = 200;
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-        myObstacles.push(new gameObject(10, height, "green", x, 0));
-        myObstacles.push(new gameObject(10, x - height - gap, "green", x, height + gap));
+        myObstacles.push(new gameObject(10, height, "./game1assets/Pole.png", x, 0,"image"));
+        myObstacles.push(new gameObject(10, x - height - gap, "./game1assets/Pole.png", x, height + gap,"image"));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
