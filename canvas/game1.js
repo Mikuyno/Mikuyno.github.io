@@ -1,6 +1,7 @@
 var myGamePiece;
 var myObstacles = [];
 var myScore;
+var Paused = false;
 
 document.addEventListener("DOMContentLoaded", function() {
     hit_sound = document.getElementById("hit_audio");
@@ -42,7 +43,8 @@ var myGameArea = {
 
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
+    },
+
 }
 
 function gameObject(width, height, color, x, y, type) {
@@ -98,6 +100,11 @@ function gameObject(width, height, color, x, y, type) {
 }
 
 function updateGameArea() {
+    if (Paused === true)
+    {
+        return;
+    }
+
     if (myGameArea.key == false)
     {
         myGamePiece.speedX=0;
@@ -153,6 +160,7 @@ function updateGameArea() {
     myGamePiece.update();
 }
 
+
 function everyinterval(n) {
     if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
     return false;
@@ -167,4 +175,9 @@ function click_start()
     const start_sound = document.getElementById("start_audio");
     start_sound.play();
     startGame();
+}
+
+function Pause()
+{
+    Paused = !Paused;
 }
