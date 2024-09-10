@@ -8,9 +8,9 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function startGame() {
-    myGamePiece = new gameObject(30, 30, "./game1assets/no-arrow.png", 20, 150,"image");
+    myGamePiece = new gameObject(30, 30, "./game1assets/no-arrow.png", 20, 150,"image",true);
     //myGamePiece.gravity = 0.05;
-    myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text");
+    myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text", false);
     myGameArea.start();
 }
 
@@ -47,7 +47,7 @@ var myGameArea = {
 
 }
 
-function gameObject(width, height, color, x, y, type) {
+function gameObject(width, height, color, x, y, type, isCircle) {
     this.type = type;
     if (this.type == "image")
     {
@@ -55,6 +55,8 @@ function gameObject(width, height, color, x, y, type) {
         this.image.src = color;
     }
  
+    this.isCircle = isCircle;
+    this.radius = width/2;
 
     this.score = 0;
     this.width = width;
@@ -102,19 +104,40 @@ function gameObject(width, height, color, x, y, type) {
         }
     }
     this.crashWith = function(otherobj) {
-        var myleft = this.x;
-        var myright = this.x + (this.width);
-        var mytop = this.y;
-        var mybottom = this.y + (this.height);
-        var otherleft = otherobj.x;
-        var otherright = otherobj.x + (otherobj.width);
-        var othertop = otherobj.y;
-        var otherbottom = otherobj.y + (otherobj.height);
-        var crash = true;
-        if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
-            crash = false;
+        var crash = false;
+        if (this.isCircle == true)
+        {
+            var CenterX = this.radius + this.x;
+            var CenterY = this.radius + this.y;
+
+            var closeX = Math.max(otherobj.x, Math.min(CenterX, otherobj.x + otherobj.width));
+            var closeY = Math.max(otherobj.y, Math.min(CenterY,otherobj.y + otherobj.height));
+
+            var distanceX = CenterX - closeX;
+            var distanceY = CenterY - closeY;
+
+            var distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+            if (distance < this.radius)
+            {
+                crash = true;
+            }
         }
-        return crash;
+        else
+        {
+            var myleft = this.x;
+            var myright = this.x + (this.width);
+            var mytop = this.y;
+            var mybottom = this.y + (this.height);
+            var otherleft = otherobj.x;
+            var otherright = otherobj.x + (otherobj.width);
+            var othertop = otherobj.y;
+            var otherbottom = otherobj.y + (otherobj.height);
+            if ((mybottom >= othertop) && (mytop <= otherbottom) && (myright >= otherleft) && (myleft <= otherright)) {
+                crash = true;
+            }
+        }
+    return crash;
     }
 }
 
@@ -171,8 +194,8 @@ function updateGameArea() {
         minGap = 50;
         maxGap = 200;
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-        myObstacles.push(new gameObject(10, height, "./game1assets/Pole.png", x, 0,"image"));
-        myObstacles.push(new gameObject(10, x - height - gap, "./game1assets/Pole.png", x, height + gap,"image"));
+        myObstacles.push(new gameObject(10, height, "./game1assets/Pole.png", x, 0,"image", false));
+        myObstacles.push(new gameObject(10, x - height - gap, "./game1assets/Pole.png", x, height + gap,"image", false));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
@@ -199,6 +222,11 @@ function click_start()
     const start_sound = document.getElementById("start_audio");
     start_sound.play();
     startGame();
+}
+
+function Pause()
+{
+    Paused = !Paused;
 }
 
 function Pause()
