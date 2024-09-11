@@ -156,18 +156,18 @@ function updateGameArea() {
     switch (myGameArea.key)
     {
         case 37:
-            myGamePiece.speedX = -2;
+            myGamePiece.speedX = -4;
             myGamePiece.image.src = "./game1assets/helicopter_backwards.png";
             break;
         case 38:
-            myGamePiece.speedY = -2;
+            myGamePiece.speedY = -4;
             break;
         case 39:
-            myGamePiece.speedX = 2;
+            myGamePiece.speedX = 4;
             myGamePiece.image.src = "./game1assets/helicopter.png";
             break;
         case 40:
-            myGamePiece.speedY = 2;
+            myGamePiece.speedY = 4;
             break;
     }
     }
@@ -176,7 +176,12 @@ function updateGameArea() {
         if (myGamePiece.crashWith(myObstacles[i]))
         {
             hit_sound.play();
+            explosion = new gameObject(200, 200, "./game1assets/explosion.png", myGamePiece.x - 50, myGamePiece.y -60,"image");
+            explosion.update();
+            setTimeout(function()
+        {
             myGameArea.stopGame();
+        },200)
             document.getElementById("Pause_Button").style.display = "none";
             document.getElementById("Restart_Button").style.display = "block";
             
@@ -185,7 +190,7 @@ function updateGameArea() {
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(150)) {
+    if (myGameArea.frameNo == 1 || everyinterval(50)) {
         x = myGameArea.canvas.width;
         minHeight = 20;
         maxHeight = 200;
@@ -202,7 +207,7 @@ function updateGameArea() {
     Background.newPos();
     Background.update();
     for (i = 0; i < myObstacles.length; i += 1) {
-        myObstacles[i].x += -1;
+        myObstacles[i].x += -6;
         myObstacles[i].update();
     }
     myScore.text="SCORE: " + myGameArea.frameNo;
