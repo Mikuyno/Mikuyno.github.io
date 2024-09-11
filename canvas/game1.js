@@ -6,6 +6,7 @@ var Paused = false;
 document.addEventListener("DOMContentLoaded", function() {
     hit_sound = document.getElementById("hit_audio");
     Music = document.getElementById("music");
+    start_sound = document.getElementById("start_audio");
 });
 
 function startGame() {
@@ -15,6 +16,12 @@ function startGame() {
 
     Background = new gameObject(700,320,"./game1assets/Background.jpg",0,0,"background")
     myGameArea.start();
+
+    start_sound.play();
+    setTimeout(function()
+    {
+        Music.play();
+    },1000)
 }
 
 var myGameArea = {
@@ -99,7 +106,7 @@ function gameObject(width, height, color, x, y, type) {
         //this.gravitySpeed += this.gravity;
         if (this.type == "background") {
             if (this.x <= -this.width) {
-                this.x = 0; // Reset position to create a seamless loop
+                this.x = 0; 
             }}
         this.x += this.speedX;
         this.y += this.speedY //+ this.gravitySpeed;
@@ -170,6 +177,9 @@ function updateGameArea() {
         {
             hit_sound.play();
             myGameArea.stopGame();
+            document.getElementById("Pause_Button").style.display = "none";
+            document.getElementById("Restart_Button").style.display = "block";
+            
             return;
         } 
     }
@@ -215,17 +225,27 @@ function accelerate(n) {
 
 function click_start()
 {
-    const start_sound = document.getElementById("start_audio");
-    start_sound.play();
-    setTimeout(function()
-    {
-        Music.play();
-    },1000)
-   
     startGame();
+    document.getElementById("Pause_Button").style.display = "block";
+    document.getElementById("Start_Button").style.display = "none";
+    
 }
 
 function Pause()
 {
     Paused = !Paused;
+}
+
+function Restart()
+{
+    myObstacles =[];
+    myScore.text = "SCORE: 0"
+    myGameArea.frameNo = 0;
+    Paused = false;
+
+    document.getElementById("Pause_Button").style.display = "block";
+    document.getElementById("Restart_Button").style.display = "none";
+    Music.currentTime = 0;
+    startGame();
+
 }
