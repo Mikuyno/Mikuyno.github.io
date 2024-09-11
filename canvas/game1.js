@@ -5,12 +5,15 @@ var Paused = false;
 
 document.addEventListener("DOMContentLoaded", function() {
     hit_sound = document.getElementById("hit_audio");
+    Music = document.getElementById("music");
 });
 
 function startGame() {
-    myGamePiece = new gameObject(30, 30, "./game1assets/no-arrow.png", 20, 150,"image",true);
+    myGamePiece = new gameObject(50, 30, "./game1assets/helicopter.png", 20, 150,"image");
     //myGamePiece.gravity = 0.05;
-    myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text", false);
+    myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text");
+
+    Background = new gameObject(700,320,"./game1assets/Background.jpg",0,0,"background")
     myGameArea.start();
 }
 
@@ -20,9 +23,9 @@ var myGameArea = {
 
     start : function() {
 
-        this.canvas.width = 480;
+        this.canvas.width = 500;
 
-        this.canvas.height = 270;
+        this.canvas.height = 320;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
@@ -31,7 +34,7 @@ var myGameArea = {
         {
             myGameArea.key = pressed.keyCode;
         });
-        window.addEventListener("keyup", function(pressed){
+        window.addEventListener("keyup", function(){
             myGameArea.key = false;
         });
         },
@@ -39,6 +42,7 @@ var myGameArea = {
     stopGame : function()
     {
         clearInterval(this.interval);
+        Music.pause();
     },
 
     clear : function() {
@@ -47,17 +51,14 @@ var myGameArea = {
 
 }
 
-function gameObject(width, height, color, x, y, type, isCircle) {
+function gameObject(width, height, color, x, y, type) {
     this.type = type;
-    if (this.type == "image")
+    if (this.type == "image" || this.type == "background")
     {
         this.image = new Image();
         this.image.src = color;
     }
  
-    this.isCircle = isCircle;
-    this.radius = width/2;
-
     this.score = 0;
     this.width = width;
     this.height = height;
@@ -75,7 +76,7 @@ function gameObject(width, height, color, x, y, type, isCircle) {
             ctx.fillText(this.text, this.x, this.y);
         
         } 
-        else if (this.type == "image")
+        else if (this.type == "image"|| this.type == "background")
         {
             ctx.drawImage(this.image,
                 this.x,
@@ -83,6 +84,10 @@ function gameObject(width, height, color, x, y, type, isCircle) {
                 this.width,
                 this.height
             );
+            if (this.type == "background")
+            {
+                ctx.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
+            }
         }
         else 
         {
@@ -92,6 +97,10 @@ function gameObject(width, height, color, x, y, type, isCircle) {
     }
     this.newPos = function() {
         //this.gravitySpeed += this.gravity;
+        if (this.type == "background") {
+            if (this.x <= -this.width) {
+                this.x = 0; // Reset position to create a seamless loop
+            }}
         this.x += this.speedX;
         this.y += this.speedY //+ this.gravitySpeed;
         this.hitBottom();
@@ -105,75 +114,55 @@ function gameObject(width, height, color, x, y, type, isCircle) {
     }
     this.crashWith = function(otherobj) {
         var crash = false;
-        if (this.isCircle == true)
-        {
-            var CenterX = this.radius + this.x;
-            var CenterY = this.radius + this.y;
 
-            var closeX = Math.max(otherobj.x, Math.min(CenterX, otherobj.x + otherobj.width));
-            var closeY = Math.max(otherobj.y, Math.min(CenterY,otherobj.y + otherobj.height));
-
-            var distanceX = CenterX - closeX;
-            var distanceY = CenterY - closeY;
-
-            var distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-            if (distance < this.radius)
-            {
-                crash = true;
-            }
+        
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        if ((mybottom >= othertop) && (mytop <= otherbottom) && (myright >= otherleft) && (myleft <= otherright)) {
+            crash = true;
         }
-        else
-        {
-            var myleft = this.x;
-            var myright = this.x + (this.width);
-            var mytop = this.y;
-            var mybottom = this.y + (this.height);
-            var otherleft = otherobj.x;
-            var otherright = otherobj.x + (otherobj.width);
-            var othertop = otherobj.y;
-            var otherbottom = otherobj.y + (otherobj.height);
-            if ((mybottom >= othertop) && (mytop <= otherbottom) && (myright >= otherleft) && (myleft <= otherright)) {
-                crash = true;
-            }
-        }
+        
     return crash;
     }
 }
 
 function updateGameArea() {
+  
     if (Paused === true)
     {
         return;
     }
-
+  
     if (myGameArea.key == false)
     {
         myGamePiece.speedX=0;
         myGamePiece.speedY=0;
-        myGamePiece.image.src = "./game1assets/no-arrow.png";
+        myGamePiece.image.src = "./game1assets/helicopter.png";
     }
     else{
     switch (myGameArea.key)
     {
         case 37:
             myGamePiece.speedX = -2;
-            myGamePiece.image.src = "./game1assets/left-arrow.png";
+            myGamePiece.image.src = "./game1assets/helicopter_backwards.png";
             break;
         case 38:
             myGamePiece.speedY = -2;
-            myGamePiece.image.src = "./game1assets/up-arrow.png";
             break;
         case 39:
             myGamePiece.speedX = 2;
-            myGamePiece.image.src = "./game1assets/right-arrow.png";
+            myGamePiece.image.src = "./game1assets/helicopter.png";
             break;
         case 40:
             myGamePiece.speedY = 2;
-            myGamePiece.image.src = "./game1assets/down-arrow.png";
             break;
     }
-
     }
     var x, height, gap, minHeight, maxHeight, minGap, maxGap;
     for (i = 0; i < myObstacles.length; i += 1) {
@@ -194,9 +183,14 @@ function updateGameArea() {
         minGap = 50;
         maxGap = 200;
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-        myObstacles.push(new gameObject(10, height, "./game1assets/Pole.png", x, 0,"image", false));
-        myObstacles.push(new gameObject(10, x - height - gap, "./game1assets/Pole.png", x, height + gap,"image", false));
+       
+        myObstacles.push(new gameObject(10, height, "./game1assets/Pole.png", x, 0,"image"));
+        myObstacles.push(new gameObject(10, x - height - gap, "./game1assets/Pole.png", x, height + gap,"image"));
     }
+
+    Background.speedX = -4;
+    Background.newPos();
+    Background.update();
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
         myObstacles[i].update();
@@ -204,7 +198,9 @@ function updateGameArea() {
     myScore.text="SCORE: " + myGameArea.frameNo;
     myScore.update();
     myGamePiece.newPos();
-    myGamePiece.update();
+    myGamePiece.update();  
+  
+   
 }
 
 
@@ -221,12 +217,12 @@ function click_start()
 {
     const start_sound = document.getElementById("start_audio");
     start_sound.play();
+    setTimeout(function()
+    {
+        Music.play();
+    },1000)
+   
     startGame();
-}
-
-function Pause()
-{
-    Paused = !Paused;
 }
 
 function Pause()
