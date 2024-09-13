@@ -2,17 +2,23 @@ var myGamePiece;
 var myObstacles = [];
 var myScore;
 var Paused = false;
+var PlayingAudio = true;
+var Coins = [];
+var collected = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
     hit_sound = document.getElementById("hit_audio");
     Music = document.getElementById("music");
     start_sound = document.getElementById("start_audio");
+    coin_sound = document.getElementById("coin_noise");
 });
 
 function startGame() {
     myGamePiece = new gameObject(50, 30, "./game1assets/helicopter.png", 20, 150,"image");
-    //myGamePiece.gravity = 0.05;
     myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text");
+    myCoins = new gameObject("30px", "Consolas", "black", 280, 65, "text");
+    
+    myCoins.text = "COINS: 0";
 
     Background = new gameObject(700,320,"./game1assets/Background.jpg",0,0,"background")
     myGameArea.start();
@@ -81,6 +87,7 @@ function gameObject(width, height, color, x, y, type) {
             ctx.font = this.width + " " + this.height;
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
+
         
         } 
         else if (this.type == "image"|| this.type == "background")
@@ -145,7 +152,7 @@ function updateGameArea() {
     {
         return;
     }
-  
+
     if (myGameArea.key == false)
     {
         myGamePiece.speedX=0;
@@ -172,6 +179,7 @@ function updateGameArea() {
     }
     }
     var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+    var coinChance;
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i]))
         {
@@ -188,6 +196,17 @@ function updateGameArea() {
             return;
         } 
     }
+    for (i = 0; i < Coins.length; i += 1) {
+        if (myGamePiece.crashWith(Coins[i]))
+        {
+            collected +=1;
+            myCoins.text ="COINS: " + collected;
+            Coins.splice(i, 1);
+            coin_sound.currentTime = 0;
+            coin_sound.play();
+            i--;
+        } 
+    }
     myGameArea.clear();
     myGameArea.frameNo += 1;
     if (myGameArea.frameNo == 1 || everyinterval(50)) {
@@ -201,6 +220,9 @@ function updateGameArea() {
        
         myObstacles.push(new gameObject(10, height, "./game1assets/Pole.png", x, 0,"image"));
         myObstacles.push(new gameObject(10, x - height - gap, "./game1assets/Pole.png", x, height + gap,"image"));
+        coinChance = Math.random();
+        if(coinChance <= 0.6)
+            Coins.push(new gameObject(20, 20, "./game1assets/coin.png", x, height + Math.random() * (gap - 20), "image"));
     }
 
     Background.speedX = -4;
@@ -210,8 +232,13 @@ function updateGameArea() {
         myObstacles[i].x += -6;
         myObstacles[i].update();
     }
+    for (i = 0; i < Coins.length; i += 1) {
+        Coins[i].x += -6;
+        Coins[i].update();
+    }
     myScore.text="SCORE: " + myGameArea.frameNo;
     myScore.update();
+    myCoins.update();
     myGamePiece.newPos();
     myGamePiece.update();  
   
@@ -244,7 +271,10 @@ function Pause()
 function Restart()
 {
     myObstacles =[];
+    Coins = [];
     myScore.text = "SCORE: 0"
+    myCoins.text = "COINS: 0"
+    collected = 0;
     myGameArea.frameNo = 0;
     Paused = false;
 
@@ -252,5 +282,20 @@ function Restart()
     document.getElementById("Restart_Button").style.display = "none";
     Music.currentTime = 0;
     startGame();
+
+}
+
+function PlayingToggle()
+{
+    PlayingAudio ? Music.pause() : Music.play();
+
+    Music.onplaying = function(){
+        PlayingAudio = true;
+    };
+
+    Music.onpause = function()
+    {
+        PlayingAudio = false;
+    };
 
 }
