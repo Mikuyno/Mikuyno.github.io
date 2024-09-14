@@ -49,5 +49,20 @@
   <img src="LoadAudio.png"></img>
   <p>Then I wanted to add an explosion after losing. I had some trouble getting the explosion to show up to replace the helicopter as it either didnt show up or showed up over the still visible helicopter when trying to directly replace it. So I created a new game object and set its position to be overtop the helicopter object on death (after messing with x and y for a bit. Also delayed the stop game function a little to allow the explosion to appear first</p>
   <img src="ExplosionAdd.png"></img>
+  <p>I then quickly added a function to handle Pausing and unpausing the Music when Pause is pressed and inserted the function call into the onclick event on the Pause button.</p>
+  <img src="MusicToggle.png"></img>
+  <p>Finally, I wanted to add something for the player to be engaged with while playing, so I thought of using the crashwith method to add coins to my game. For this I ran through a few trail and errors and eventually learned that the splice function exists to remove objects from an array which solved a problem I had where one coin could be collected many times while the player was passing through. I also added another text under score to display coins obtained to the player and a sound that plays upon collection</p>
+  <img src="Coin+collectedVar.png"></img>
+  <img src="Coin.png"></img>
+  <img src="CoinText.png"></img>
+  <img src="CoinCrash.png"></img>
+  <p>As for coins spawning, I wanted it to be randomly in the middle of some but not all the obstacles, so I thought to use an if statement as well as a Math random to create a random number and if that number was below or equal to 0.6, a coin would spawn in the obstacle gap (60% chance). For the actual spawning I copy pasted from the obstacles and modified the size and y accordingly. I also copied the update loop from obstacles as it is the exact same for the coins</p>
+  <img src="CoinSpawn.png"></img>
+  <img src="CoinUpdate.png"></img>
+  <h5>Final Game Screenshot</h5>
+  <img src="FinalGameScreenshot.png"></img>
+  <h1>Reflection</h1>
+  <P>During this project I had to teach myself javascript thorugh W2 schools and various youtube videos and essentially had to look up and find the keyword for every implementation I wanted to make. Starting out, I had many errors in my code and felt intimidated coding in a language ice never used before. The frame updates in particular still confuse me partially. However, through trial and error and many guides, I feel confident in my basic javascript abilities and can implement basic data structures way easier.<br>
+  Furthermore, Github was also intimidating to me as I have never used it and with this project I now know how to do many things in a repository that I didnt before. The above documentation is all my changes and thought processes summed up and I feel accomplished learning the basics of javascript through this project. I hope to use ideas from this in our next project in konova</P>  
 </body>
 </html>
