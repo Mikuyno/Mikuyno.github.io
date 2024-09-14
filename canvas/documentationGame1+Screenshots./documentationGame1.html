@@ -53,7 +53,6 @@
   <img src="MusicToggle.png"></img>
   <p>Finally, I wanted to add something for the player to be engaged with while playing, so I thought of using the crashwith method to add coins or shooting to my game. Ultimately I chose coins for no reason other than prefrence. For this I created a coin array (following the obstacles example) and ran through a few trail and errors and eventually learned that the splice function exists to remove objects from an array which solved a problem I had where one coin could be collected many times while the player was passing through. I also added another text under score to display coins obtained to the player and a sound that plays upon collection</p>
   <img src="Coin+collectedVar.png"></img>
-  <img src="Coin.png"></img>
   <img src="CoinText.png"></img>
   <img src="CoinCrash.png"></img>
   <p>As for coins spawning, I wanted it to be randomly in the middle of some but not all the obstacles, so I thought to use an if statement as well as a Math random to create a random number and if that number was below or equal to 0.6, a coin would spawn in the obstacle gap (60% chance). For the actual spawning I copy pasted from the obstacles and modified the size and y accordingly. I also copied the update loop from obstacles as it is the exact same for the coins</p>
