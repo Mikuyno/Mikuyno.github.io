@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function startGame() {
+    
     myGamePiece = new gameObject(50, 30, "./game1assets/helicopter.png", 20, 150,"image");
     myScore = new gameObject("30px", "Consolas", "black", 280, 40, "text");
     myCoins = new gameObject("30px", "Consolas", "black", 280, 65, "text");
@@ -35,6 +36,11 @@ var myGameArea = {
     canvas : document.createElement("canvas"),
 
     start : function() {
+
+        if (this.interval)
+        {
+            clearInterval(this.interval);
+        };
 
         this.canvas.width = 500;
 
@@ -258,8 +264,8 @@ function accelerate(n) {
 function click_start()
 {
     startGame();
-    document.getElementById("Pause_Button").style.display = "block";
     document.getElementById("Start_Button").style.display = "none";
+    document.getElementById("Pause_Button").style.display = "block";
     
 }
 
@@ -277,6 +283,8 @@ function Restart()
     collected = 0;
     myGameArea.frameNo = 0;
     Paused = false;
+
+    myGameArea.clear();
 
     document.getElementById("Pause_Button").style.display = "block";
     document.getElementById("Restart_Button").style.display = "none";
