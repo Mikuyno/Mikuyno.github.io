@@ -5,6 +5,7 @@ var Paused = false;
 var PlayingAudio = true;
 var Coins = [];
 var collected = 0;
+//Initialize needed variables
 
 document.addEventListener("DOMContentLoaded", function() {
     hit_sound = document.getElementById("hit_audio");
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
     start_sound = document.getElementById("start_audio");
     coin_sound = document.getElementById("coin_noise");
 });
+//Load audio elements to be used as the page loads
 
 function startGame() {
     
@@ -28,13 +30,14 @@ function startGame() {
     setTimeout(function()
     {
         Music.play();
-    },1000)
+    },600)
 }
+//Starts music after 600ms and creates all needed game objects
 
 var myGameArea = {
 
     canvas : document.createElement("canvas"),
-
+    //Create canvas
     start : function() {
 
         if (this.interval)
@@ -57,17 +60,17 @@ var myGameArea = {
             myGameArea.key = false;
         });
         },
-
+        //Initialize canvas and add event listeners for key pressing and unpressing
     stopGame : function()
     {
         clearInterval(this.interval);
         Music.pause();
     },
-
+    //Makes sure game is stopped and cleared when player loses
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
-
+    //Clears the game area
 }
 
 function gameObject(width, height, color, x, y, type) {
@@ -115,6 +118,7 @@ function gameObject(width, height, color, x, y, type) {
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
     }
+    //Creates game objects based on width, height, color (or image link), x pos, y pos, and type of object (image, text, background or undefined (rectangle))
     this.newPos = function() {
         //this.gravitySpeed += this.gravity;
         if (this.type == "background") {
@@ -125,6 +129,7 @@ function gameObject(width, height, color, x, y, type) {
         this.y += this.speedY //+ this.gravitySpeed;
         this.hitBottom();
     }
+    //Sets the position of game objects, if the object is a background then the position should reset when out of frame
     this.hitBottom = function() {
         var rockbottom = myGameArea.canvas.height - this.height;
         if (this.y > rockbottom) {
@@ -132,6 +137,7 @@ function gameObject(width, height, color, x, y, type) {
             this.gravitySpeed = 0;
         }
     }
+    //Makes sure game piece stays above the bottom of the convas
     this.crashWith = function(otherobj) {
         var crash = false;
 
@@ -150,6 +156,7 @@ function gameObject(width, height, color, x, y, type) {
         
     return crash;
     }
+    //If game object collides with another object then this function returns true and if not false
 }
 
 function updateGameArea() {
@@ -158,7 +165,7 @@ function updateGameArea() {
     {
         return;
     }
-
+    //Prevent update if paused
     if (myGameArea.key == false)
     {
         myGamePiece.speedX=0;
@@ -184,6 +191,7 @@ function updateGameArea() {
             break;
     }
     }
+    //If the helicopter is still or moving right then it faces right, if the helicopter is moving left it faces left
     var x, height, gap, minHeight, maxHeight, minGap, maxGap;
     var coinChance;
     for (i = 0; i < myObstacles.length; i += 1) {
@@ -202,17 +210,26 @@ function updateGameArea() {
             return;
         } 
     }
+    //Other object to crash with is the obstacles and if the game object does, an explosion is spawned over the player and a hit sound plays while showing the restart button and the game stops 
     for (i = 0; i < Coins.length; i += 1) {
         if (myGamePiece.crashWith(Coins[i]))
         {
             collected +=1;
             myCoins.text ="COINS: " + collected;
+
+            myGameArea.frameNo += 50;
+            myScore.text = "SCORE: " + myGameArea.frameNo;
+
+
             Coins.splice(i, 1);
             coin_sound.currentTime = 0;
             coin_sound.play();
             i--;
+
+
         } 
     }
+    //ther object to crash with is the coins and after collision the coins value increases by 1, the coin despawns, and the score is increased by 50
     myGameArea.clear();
     myGameArea.frameNo += 1;
     if (myGameArea.frameNo == 1 || everyinterval(50)) {
@@ -230,10 +247,11 @@ function updateGameArea() {
         if(coinChance <= 0.6)
             Coins.push(new gameObject(20, 20, "./game1assets/coin.png", x, height + Math.random() * (gap - 20), "image"));
     }
-
+    //Spawns obstacle and has a 60% chance of spawning a coin every 50 frames
     Background.speedX = -4;
     Background.newPos();
     Background.update();
+    //Update background to allow it to loop
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -6;
         myObstacles[i].update();
@@ -242,11 +260,13 @@ function updateGameArea() {
         Coins[i].x += -6;
         Coins[i].update();
     }
+    //Update obstacles and coins 
     myScore.text="SCORE: " + myGameArea.frameNo;
     myScore.update();
     myCoins.update();
     myGamePiece.newPos();
     myGamePiece.update();  
+    //Update helicopter, coin text, and score text 
   
    
 }
@@ -256,10 +276,7 @@ function everyinterval(n) {
     if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
     return false;
 }
-
-function accelerate(n) {
-    myGamePiece.gravity = n;
-}
+// Checks if frame number is a multiple of n
 
 function click_start()
 {
@@ -268,12 +285,12 @@ function click_start()
     document.getElementById("Pause_Button").style.display = "block";
     
 }
-
+//Function that starts the game when the start button is clicked then hides it and displays the pause button
 function Pause()
 {
     Paused = !Paused;
 }
-
+//Pause toggle function for pause button
 function Restart()
 {
     myObstacles =[];
@@ -292,7 +309,7 @@ function Restart()
     startGame();
 
 }
-
+//Initialize everything and restart game when restart button is pressed
 function PlayingToggle()
 {
     PlayingAudio ? Music.pause() : Music.play();
@@ -307,3 +324,4 @@ function PlayingToggle()
     };
 
 }
+//Toggles background-Music when pressing pause button
