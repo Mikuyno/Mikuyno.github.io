@@ -25,7 +25,10 @@
         <div>
           <p>You clicked {count} times</p>
           <button onClick={() => setCount(count + 1)}>
-            Click me
+            Click me to increase
+          </button>
+           <button onClick={() => setCount(count - 1)}>
+            Click me to decrease
           </button>
         </div>
       );
