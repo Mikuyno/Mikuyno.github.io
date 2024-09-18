@@ -14,8 +14,8 @@
   <img src="click start function.png"></img>
   <p> For the Obstacle audio, I set an event listener to immedietly store the id of the hit sound effect in the variable hit_audio. <br>
   Then I put the play function for this audio inside the if statement checking if an obsticle has been hit.</p>
-  <img src="EventListenCreateAudio(Obstacle).png"></img>
-  <img src="AddAudio(obstacle)+StopGame.png"></img>
+  <img src="EventListenCreateAudio_Obstacle_.png"></img>
+  <img src="AddAudio_obstacle_StopGame.png"></img>
   <p>However, I realized the audio would play forever if an object was hit. So I added a StopGame function into the GameArea to clear the interval so the game would stop and added it into the if statement (seen above)</p>
   <img src="StopGame.png"></img>
   <p>After this I worked on a pause/continue button which was actually very simple. just set up a boolean variable and change its value via a function when the button is pressed. Then use an if statement to return from updating the game area if the pause button gets clicked and to resume if clicked again</p>
@@ -52,7 +52,7 @@
   <p>I then quickly added a function to handle Pausing and unpausing the Music when Pause is pressed and inserted the function call into the onclick event on the Pause button.</p>
   <img src="MusicToggle.png"></img>
   <p>Finally, I wanted to add something for the player to be engaged with while playing, so I thought of using the crashwith method to add coins or shooting to my game. Ultimately I chose coins for no reason other than prefrence. For this I created a coin array (following the obstacles example) and ran through a few trail and errors and eventually learned that the splice function exists to remove objects from an array which solved a problem I had where one coin could be collected many times while the player was passing through. I also added another text under score to display coins obtained to the player and a sound that plays upon collection</p>
-  <img src="Coin+collectedVar.png"></img>
+  <img src="Coin_collectedVar.png"></img>
   <img src="CoinText.png"></img>
   <img src="CoinCrash.png"></img>
   <p>As for coins spawning, I wanted it to be randomly in the middle of some but not all the obstacles, so I thought to use an if statement as well as a Math random to create a random number and if that number was below or equal to 0.6, a coin would spawn in the obstacle gap (60% chance). For the actual spawning I copy pasted from the obstacles and modified the size and y accordingly. I also copied the update loop from obstacles as it is the exact same for the coins</p>
