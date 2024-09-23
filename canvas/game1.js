@@ -248,10 +248,11 @@ function updateGameArea() {
             Coins.push(new gameObject(20, 20, "./game1assets/coin.png", x, height + Math.random() * (gap - 20), "image"));
     }
     //Spawns obstacle and has a 60% chance of spawning a coin every 50 frames
+
+    //Update background to allow it to loop
     Background.speedX = -4;
     Background.newPos();
     Background.update();
-    //Update background to allow it to loop
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -6;
         myObstacles[i].update();
@@ -266,6 +267,7 @@ function updateGameArea() {
     myCoins.update();
     myGamePiece.newPos();
     myGamePiece.update();  
+   
     //Update helicopter, coin text, and score text 
   
    
