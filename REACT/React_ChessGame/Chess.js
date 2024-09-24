@@ -46,6 +46,7 @@
                   return true;
                 }
                 break;
+
               case "r":
               case "R":
                 if(piece== "r" && row >=0 && row <=7 && selectedcol == col)
@@ -61,6 +62,54 @@
                   return true;
                 }
                 if(piece== "R" && col >=0 && col <=7 && selectedrow == row)
+                {
+                  return true;
+                }
+                break;
+
+                case "k":
+                case "K":
+                if(piece== "k" && (selectedrow == row+1 || selectedrow == row-1 || selectedrow == row) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col))
+                {
+                  return true;
+                }
+                if(piece== "K" && (selectedrow == row+1 || selectedrow == row-1 ) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col))
+                {
+                  return true;
+                }
+                break;
+
+                case "b":
+                case "B":
+                if(piece== "b" && Math.abs(selectedrow - row) === Math.abs(selectedcol-col))
+                {
+                  return true;
+                }
+                if(piece== "B" && Math.abs(selectedrow - row) === Math.abs(selectedcol-col))
+                {
+                  return true;
+                }
+                break;
+
+                case "n":
+                case "N":
+                if(piece== "n" && ((selectedcol === col +1 || selectedcol === col -1) && (selectedrow === row +2 || selectedrow === row -2 ) || (selectedrow === row +1 || selectedrow === row -1) && (selectedcol === col +2 || selectedcol === col -2)) )
+                {
+                  return true;
+                }
+                if(piece== "N" && ((selectedcol === col +1 || selectedcol === col -1) && (selectedrow === row +2 || selectedrow === row -2 ) || (selectedrow === row +1 || selectedrow === row -1) && (selectedcol === col +2 || selectedcol === col -2)))
+                {
+                  return true;
+                }
+                break;
+
+                case "q":
+                case "Q":
+                if(piece== "q" && ((row >=0 && row <=7 && selectedcol == col)||(col >=0 && col <=7 && selectedrow == row)) || ((selectedrow == row+1 || selectedrow == row-1 || selectedrow == row) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col)) || (Math.abs(selectedrow - row) === Math.abs(selectedcol-col)))
+                {
+                  return true;
+                }
+                if(piece== "Q" && ((row >=0 && row <=7 && selectedcol == col)||(col >=0 && col <=7 && selectedrow == row)) || ((selectedrow == row+1 || selectedrow == row-1 || selectedrow == row) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col)) || (Math.abs(selectedrow - row) === Math.abs(selectedcol-col)))
                 {
                   return true;
                 }
