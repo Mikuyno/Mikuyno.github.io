@@ -83,7 +83,7 @@
         justifyContent: 'center',
         alignItems: 'center',
         cursor: 'pointer',
-        backgroundColor: isSelected ? '#ffeb3b' : (isLight ? '#f0d9b5' : '#b58863'),
+        backgroundColor: isSelected ? '#ffeb3b' : (isLight ? 'tomato' : 'grey'),
         border: '1px solid #999'
       };
 
