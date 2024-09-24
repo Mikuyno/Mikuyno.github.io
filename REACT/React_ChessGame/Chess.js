@@ -30,16 +30,62 @@
       const [selectedSquare, setSelectedSquare] = React.useState(null);
 
       // Handle square click for moving pieces
+      function handleValidation(game, selectedrow, selectedcol, row, col)
+      {
+          const piece = game[selectedrow][selectedcol];
+          switch(piece)
+          {
+              case "p":
+              case "P":
+                if(piece== "p" && selectedrow == row - 1 && selectedcol == col)
+                {
+                  return true;
+                }
+                if (piece== "P" && selectedrow == row + 1 && selectedcol == col)
+                {
+                  return true;
+                }
+                break;
+              case "r":
+              case "R":
+                if(piece== "r" && row >=0 && row <=7 && selectedcol == col)
+                {
+                  return true;
+                }
+                if(piece== "r" && col >=0 && col <=7 && selectedrow == row)
+                {
+                  return true;
+                }
+                if(piece== "R" && row >=0 && row <=7 && selectedcol == col)
+                {
+                  return true;
+                }
+                if(piece== "R" && col >=0 && col <=7 && selectedrow == row)
+                {
+                  return true;
+                }
+                break;
+          }
+      }
       function handleClick(row, col) {
         if (selectedSquare) {
           const newGame = game.map(row => row.slice());
           const [selectedRow, selectedCol] = selectedSquare;
 
+          const ValidMove = handleValidation(game, selectedRow, selectedCol, row, col)
+
+          if(ValidMove)
+          {
           // Move the piece to the new location
           newGame[row][col] = newGame[selectedRow][selectedCol];
           newGame[selectedRow][selectedCol] = '';
           setGame(newGame);
           setSelectedSquare(null);
+          }
+          else
+          {
+            alert("Invalid Move!!!")
+          }
         } else {
           if (game[row][col]) {
             setSelectedSquare([row, col]);
