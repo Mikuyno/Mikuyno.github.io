@@ -1,11 +1,12 @@
 <h3>Explaining starter code: </h3>
+<br>
 <p>First, in the html file we add the links for encorperating react and also add a div object with the id root to hold the react canvas</p>
 <img src="HtmlFile.png" alt="html"></img>
 <p>Then in the javascript file we first have the 2D array that initializes all the pieces</p>
 <img src="Initialize.png" alt="Initialize"></img>
 <p>Then each chess piece in the array is overwritten by an image that represents said piece</p>
 <img src="Pieces to images.png" alt="Piece to image"></img>
-<p>Then the Game function. First of all, the React.useState allows the Game function to remember things after re rendering such as the state of where the pieces are and if a piece is selected or not. <br>
+<p>Then the Game function. First of all, the React.useState hook allows the Game function to remember things after re rendering such as the state of where the pieces are and if a piece is selected or not. <br>
 Then using the coordinates of the selected piece, the handle clicks function is called and has 2 jobs. If selected square is null that means the handle click function must set the selected square to what the user has clicked. If selected square is not null, the handle click function creates a newgame to store all the new information in, and then moves the piece selected to the user selected row and column. After this, the setgame sets the newly stored s=game state to be newgame and reinitializes selected square. <br>
 Finally, the board is rendered with the last statement, passing the game state, the handle click function, and the currently selected square into a div that displays the board object. </p>
 <img src="GameFunc.png" alt="Game"></img>
@@ -13,6 +14,18 @@ Finally, the board is rendered with the last statement, passing the game state, 
 This function wraps the chessboard in one big div and inside this div it iterates throughout each row of the chessboard, wrapping each individual square (array object) in another div which is given the flex property to ensure the squares are neatly side by side. Each row is given a unique colIndex identifier for rendering <br>
 Next, the individual squares must be rendered. Each square is also given a unique identity from its col index. Value tells the square what to display, and the onClick event is used here to call the onsquareclick function when the square is clicked. The isLight is to determine which squares will be a light color or not. Finally, the isSelected is true if the selected square's index is the same as the current square's index, false if not.</p>
 <img src="BoardFunc.png" alt="Board"></img>
-<p>Then Finally the square function. This function is passed the established parameters from the board function being the value, onclick, isLight, and isSelected. This function starts off with some css styling determining the look of each square. Most notably it uses the isSelected to determine a highlight color and the islight function to swap between light and dark rendered squares. Furthermore, if value isnt null, the function sets the square to have an image inside it which is the piece value is depicting. Finally, the function makes the square a clickable button that triggers the onClick function call. Then the react canvas is inserted into the div id root element that was set up in the html file.</p>
+<p>Then Finally the square function. This function is passed the established parameters (props) from the board function being the value, onclick, isLight, and isSelected. This function starts off with some css styling determining the look of each square. Most notably it uses the isSelected to determine a highlight color and the islight function to swap between light and dark rendered squares. Furthermore, if value isnt null, the function sets the square to have an image inside it which is the piece value is depicting. Finally, the function makes the square a clickable button that triggers the onClick function call. Then the react canvas is inserted into the div id root element that was set up in the html file.</p>
 <img src="SquareFunc.png" alt="Square"></img>
 <h3>Enhancements: </h3>
+<br>
+<p>First of all, I wanted to add very base level move validation to get each piece to move in the correct direction, so I made a HandleValidation function within the game function that is passed the values of game, the selected square's index, and the index of the square the piece selected is moving to. Since game is the array containing the game state, the index of the selected square in game equals the current piece which I made a variable. Then, I used a switch statement with cases for each black and white piece to determine which piece's movement logic we need based on the piece variable. Pawns move once and forward (for now), bishops move on diagonals, knight moves in L shape, king moves in a box, rooks move vertical or horizontal, and the queen is a combination of the king, bishop, and rook. <br>
+Then I set it to be called in the handleClick function so that a piece is only moved if the move is valid, else the window will display an alert.</p>
+<img src="Validate1.png" alt="Validate1"></img>
+<img src="Validate2.png" alt="Validate2"></img>
+<img src="ValidateUse.png" alt="Use Validate"></img>
+<p>Next I made the pawns able to move twice only if they are in thier starting positions to finish the basic movement logic.</p>
+<img src="PawnMove.png" alt="Pawn Movement"></img>
+<p>After basic movement logic, I wanted to work on allowing turns. So I created a new initial variable named initialturn and set it to white. Then I used a useState hook to store the current turn and then be able to set it, giving turn the initial value of initial turn. To handle making moves out of turn invalid, I turned to my validation function again, using the javascript toLowerCase and toUpperCase to check if turns are properly being taken (checking that we are not moving a lowercase piece on a white turn and vice versa) <br>
+After writing this, I simply added the parameter turn to the validation function therefore making out of turn moves invalid. I used setTurn from the useState hook and a conditional statement to swap turns over. Also made selectedsquare == null after the alert so players wouldnt get stuck in a move invalid loop.</p>
+<img src="AddTurn.png" alt="Adding Turns"></img>
+<img src="SwitchTurn.png" alt="Turn Switching"></img>
