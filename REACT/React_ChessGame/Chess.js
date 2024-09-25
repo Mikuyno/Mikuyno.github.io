@@ -27,10 +27,34 @@
 
     const initialTurn = "white";
 
+    function TurnTrack ({turn})
+    {
+      const TrackerStyle =
+      {
+        marginBottom: "20px",
+        fontSize: "24px",
+        fontWeight: "bold",
+        textAlign: "center",
+      };
+
+      return(
+        <div style = {TrackerStyle}>
+          Current Turn: {turn.charAt(0).toUpperCase() + turn.slice(1)}
+        </div>
+      )
+    }
+
     function Game() {
       const [game, setGame] = React.useState(initialGameState);
       const [selectedSquare, setSelectedSquare] = React.useState(null);
       const [turn, setTurn] = React.useState(initialTurn)
+
+      return (
+        <div>
+          <TurnTrack turn={turn} />
+          <Board game={game} onSquareClick={handleClick} selectedSquare={selectedSquare} />
+        </div>
+      );
 
       // Handle square click for moving pieces
       function handleValidation(game, selectedrow, selectedcol, row, col, turn)
