@@ -25,23 +25,50 @@
       'P': 'https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg'
     };
 
+    const initialTurn = "white";
+
     function Game() {
       const [game, setGame] = React.useState(initialGameState);
       const [selectedSquare, setSelectedSquare] = React.useState(null);
+      const [turn, setTurn] = React.useState(initialTurn)
 
       // Handle square click for moving pieces
-      function handleValidation(game, selectedrow, selectedcol, row, col)
+      function handleValidation(game, selectedrow, selectedcol, row, col, turn)
       {
           const piece = game[selectedrow][selectedcol];
+
+          if (turn == "white" && piece == piece.toLowerCase())
+          {
+            return false;
+          }
+          if(turn == "black" && piece == piece.toUpperCase())
+          {
+            return false;
+          }
+
           switch(piece)
           {
               case "p":
               case "P":
-                if(piece== "p" && selectedrow == row - 1 && selectedcol == col)
+                if(piece == "p" && selectedrow == 1)
+                {
+                  if((selectedrow == row - 1 && selectedcol == col) || (selectedrow == row - 2 && selectedcol == col))
+                  {
+                    return true;
+                  }
+                }
+                else if (piece== "p" && selectedrow == row - 1 && selectedcol == col)
                 {
                   return true;
                 }
-                if (piece== "P" && selectedrow == row + 1 && selectedcol == col)
+                if(piece == "P" && selectedrow == 6)
+                  {
+                    if((selectedrow == row + 1 && selectedcol == col) || (selectedrow == row + 2 && selectedcol == col))
+                    {
+                      return true;
+                    }
+                  }
+                else if (piece== "P" && selectedrow == row + 1 && selectedcol == col)
                 {
                   return true;
                 }
@@ -121,7 +148,7 @@
           const newGame = game.map(row => row.slice());
           const [selectedRow, selectedCol] = selectedSquare;
 
-          const ValidMove = handleValidation(game, selectedRow, selectedCol, row, col)
+          const ValidMove = handleValidation(game, selectedRow, selectedCol, row, col, turn)
 
           if(ValidMove)
           {
@@ -130,10 +157,12 @@
           newGame[selectedRow][selectedCol] = '';
           setGame(newGame);
           setSelectedSquare(null);
+          setTurn(turn == "white" ? "black" : "white");
           }
           else
           {
-            alert("Invalid Move!!!")
+            alert("Invalid Move!!!");
+            setSelectedSquare(null);
           }
         } else {
           if (game[row][col]) {
