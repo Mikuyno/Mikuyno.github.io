@@ -44,6 +44,27 @@
       )
     }
 
+    function PathCheck (game, selectedrow, selectedcol, row, col)
+    {
+      const rowDir = Math.sign(row - selectedrow);
+      const colDir = Math.sign(col - selectedcol);
+
+      let currentRow = selectedrow + rowDir;
+      let currentCol = selectedcol + colDir;
+
+      while(currentRow != row || currentCol != col)
+      {
+        if(game[currentRow][currentCol] != "")
+        {
+          return false;
+        }
+        currentRow += rowDir;
+        currentCol += colDir;
+      }
+       
+      return true;
+    }
+
     function Game() {
       const [game, setGame] = React.useState(initialGameState);
       const [selectedSquare, setSelectedSquare] = React.useState(null);
@@ -60,6 +81,7 @@
       function handleValidation(game, selectedrow, selectedcol, row, col, turn)
       {
           const piece = game[selectedrow][selectedcol];
+          const selected = game[row][col];
 
           if (turn == "white" && piece == piece.toLowerCase())
           {
@@ -70,6 +92,27 @@
             return false;
           }
 
+          if(selected != '')
+          {
+            if(turn=="white")
+            {
+              if(selected == selected.toUpperCase())
+              {
+                return false;
+              }
+            }
+            if (turn == "black")
+            {
+              if(selected == selected.toLowerCase())
+              {
+                return false;
+              }
+            }
+            
+          }
+
+
+
           switch(piece)
           {
               case "p":
@@ -78,41 +121,76 @@
                 {
                   if((selectedrow == row - 1 && selectedcol == col) || (selectedrow == row - 2 && selectedcol == col))
                   {
-                    return true;
-                  }
-                }
-                else if (piece== "p" && selectedrow == row - 1 && selectedcol == col)
-                {
-                  return true;
-                }
-                if(piece == "P" && selectedrow == 6)
-                  {
-                    if((selectedrow == row + 1 && selectedcol == col) || (selectedrow == row + 2 && selectedcol == col))
+                    if(selected == '')
                     {
                       return true;
                     }
                   }
+                  else if(selectedrow == row - 1 && (selectedcol == col + 1 || selectedcol == col-1))
+                  {
+                    if(selected == selected.toUpperCase(selected))
+                    {
+                      return true;
+                    }
+                  }
+                }
+                else if (piece== "p" && selectedrow == row - 1 && selectedcol == col)
+                {
+                  if(selected == '')
+                    {
+                      return true;
+                    }
+        
+                }
+                else if (piece =="p" && selectedrow == row - 1 && (selectedcol == col + 1 || selectedcol == col-1))
+                  {
+                    if (selected == selected.toUpperCase(selected))
+                    {
+                      return true;
+                    }
+                  }
+
+                if(piece == "P" && selectedrow == 6)
+                  {
+                    if((selectedrow == row + 1 && selectedcol == col) || (selectedrow == row + 2 && selectedcol == col))
+                    {
+                      if(selected == '')
+                        {
+                          return true;
+                        }
+                    }
+                    else if(selectedrow == row + 1 && (selectedcol == col + 1 || selectedcol == col-1))
+                    {
+                      if(selected == selected.toLowerCase(selected))
+                      {
+                        return true;
+                      }
+                    }
+                  }
                 else if (piece== "P" && selectedrow == row + 1 && selectedcol == col)
                 {
-                  return true;
+                  if(selected == '')
+                    {
+                      return true;
+                    }
+                }
+                else if (piece =="P" && selectedrow == row + 1 && (selectedcol == col +1 || selectedcol == col-1))
+                {
+                  if (selected == selected.toLowerCase(selected))
+                  {
+                    return true;
+                  }
                 }
                 break;
 
               case "r":
               case "R":
-                if(piece== "r" && row >=0 && row <=7 && selectedcol == col)
+                if(row >=0 && row <=7 && selectedcol == col && PathCheck(game,selectedrow, selectedcol, row, col))
                 {
                   return true;
                 }
-                if(piece== "r" && col >=0 && col <=7 && selectedrow == row)
-                {
-                  return true;
-                }
-                if(piece== "R" && row >=0 && row <=7 && selectedcol == col)
-                {
-                  return true;
-                }
-                if(piece== "R" && col >=0 && col <=7 && selectedrow == row)
+
+                if(col >=0 && col <=7 && selectedrow == row && PathCheck(game,selectedrow, selectedcol, row, col))
                 {
                   return true;
                 }
@@ -120,11 +198,7 @@
 
                 case "k":
                 case "K":
-                if(piece== "k" && (selectedrow == row+1 || selectedrow == row-1 || selectedrow == row) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col))
-                {
-                  return true;
-                }
-                if(piece== "K" && (selectedrow == row+1 || selectedrow == row-1 ) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col))
+                if((selectedrow == row+1 || selectedrow == row-1 || selectedrow == row) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col))
                 {
                   return true;
                 }
@@ -132,23 +206,14 @@
 
                 case "b":
                 case "B":
-                if(piece== "b" && Math.abs(selectedrow - row) === Math.abs(selectedcol-col))
+                if(Math.abs(selectedrow - row) === Math.abs(selectedcol-col) && PathCheck(game,selectedrow, selectedcol, row, col))
                 {
                   return true;
                 }
-                if(piece== "B" && Math.abs(selectedrow - row) === Math.abs(selectedcol-col))
-                {
-                  return true;
-                }
-                break;
 
                 case "n":
                 case "N":
-                if(piece== "n" && ((selectedcol === col +1 || selectedcol === col -1) && (selectedrow === row +2 || selectedrow === row -2 ) || (selectedrow === row +1 || selectedrow === row -1) && (selectedcol === col +2 || selectedcol === col -2)) )
-                {
-                  return true;
-                }
-                if(piece== "N" && ((selectedcol === col +1 || selectedcol === col -1) && (selectedrow === row +2 || selectedrow === row -2 ) || (selectedrow === row +1 || selectedrow === row -1) && (selectedcol === col +2 || selectedcol === col -2)))
+                if(((selectedcol === col +1 || selectedcol === col -1) && (selectedrow === row +2 || selectedrow === row -2 ) || (selectedrow === row +1 || selectedrow === row -1) && (selectedcol === col +2 || selectedcol === col -2)) )
                 {
                   return true;
                 }
@@ -156,11 +221,7 @@
 
                 case "q":
                 case "Q":
-                if(piece== "q" && ((row >=0 && row <=7 && selectedcol == col)||(col >=0 && col <=7 && selectedrow == row)) || ((selectedrow == row+1 || selectedrow == row-1 || selectedrow == row) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col)) || (Math.abs(selectedrow - row) === Math.abs(selectedcol-col)))
-                {
-                  return true;
-                }
-                if(piece== "Q" && ((row >=0 && row <=7 && selectedcol == col)||(col >=0 && col <=7 && selectedrow == row)) || ((selectedrow == row+1 || selectedrow == row-1 || selectedrow == row) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col)) || (Math.abs(selectedrow - row) === Math.abs(selectedcol-col)))
+                if((((row >=0 && row <=7 && selectedcol == col)||(col >=0 && col <=7 && selectedrow == row)) || ((selectedrow == row+1 || selectedrow == row-1 || selectedrow == row) && (selectedcol == col+1 || selectedcol == col-1 || selectedcol == col)) || (Math.abs(selectedrow - row) === Math.abs(selectedcol-col))) && PathCheck(game,selectedrow, selectedcol, row, col))
                 {
                   return true;
                 }
