@@ -37,5 +37,8 @@
     After writing this, I simply added the parameter turn to the validation function therefore making out of turn moves invalid. I used setTurn from the useState hook and a conditional statement to swap turns over. Also made selectedsquare == null after the alert so players wouldnt get stuck in a move invalid loop.</p>
     <img src="AddTurn.png" alt="Adding Turns"></img>
     <img src="SwitchTurn.png" alt="Turn Switching"></img>
+    <p>After working turns, I felt this was a good place to implement path checking to the bishop, rook, and queen so that they dont jump over pieces. So, I made a PathCheck function that takes the current game state and the current/destination rows and columns. First I knew I needed a counter so I decided to use the Math.sign function to determine what direction each piece was trying to move based on row and column. Then I used those directions to track the current square in a while loop that loops until reaching the destination row and column of the piece, or if the square at game[currentrow][currentcol] was occupied, if it is occupied, the function returns false, but if there is nothing in the way, it returns true. <br>
+    Then I simply called this function as a condition for the bishop, rook, and queen movement.</p>
+    <img src="CheckPath.png" alt="Path check Function"></img>
 </body>
 </html>
