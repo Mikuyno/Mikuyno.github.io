@@ -66,9 +66,11 @@
     }
 
     function Game() {
+
       const [game, setGame] = React.useState(initialGameState);
       const [selectedSquare, setSelectedSquare] = React.useState(null);
       const [turn, setTurn] = React.useState(initialTurn)
+      const [GameState, setGameState] = React.useState("running")
 
       return (
         <div>
@@ -228,28 +230,54 @@
                 break;
           }
       }
+
+      function KingCaptured (game, color)
+      {
+        const king = color === "white" ? "K" : "k"
+        for(let row = 0; row < game.length; row++)
+        {
+          for(let col= 0; col < game[row].length; col++)
+          {
+            if(game[row][col]== king)
+            {
+              return;
+            }
+          }
+        }
+        setGameState("checkmate")
+        alert(color== "white" ? "Black Wins!!" : "White Wins!!")
+        return;
+      }
+    
       function handleClick(row, col) {
+        if(GameState=="checkmate")
+        {
+          return;
+        }
         if (selectedSquare) {
           const newGame = game.map(row => row.slice());
           const [selectedRow, selectedCol] = selectedSquare;
+          const nextTurn = (turn == "white" ? "black" : "white");
 
           const ValidMove = handleValidation(game, selectedRow, selectedCol, row, col, turn)
 
           if(ValidMove)
           {
-          // Move the piece to the new location
-          newGame[row][col] = newGame[selectedRow][selectedCol];
-          newGame[selectedRow][selectedCol] = '';
-          setGame(newGame);
-          setSelectedSquare(null);
-          setTurn(turn == "white" ? "black" : "white");
+            // Move the piece to the new location
+            newGame[row][col] = newGame[selectedRow][selectedCol];
+            newGame[selectedRow][selectedCol] = '';
+            setGame(newGame);
+            KingCaptured(newGame, nextTurn)
+            setSelectedSquare(null);
+            setTurn(nextTurn);
           }
           else
           {
             alert("Invalid Move!!!");
             setSelectedSquare(null);
           }
-        } else {
+        }
+        else {
           if (game[row][col]) {
             setSelectedSquare([row, col]);
           }
