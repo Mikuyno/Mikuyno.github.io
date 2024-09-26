@@ -245,7 +245,7 @@
           }
         }
         setGameState("checkmate")
-        alert(color== "white" ? "Black Wins!!" : "White Wins!!")
+        alert(color== "white" ? "Checkmate. Black Wins!!" : "Checkmate. White Wins!!")
         return;
       }
     
