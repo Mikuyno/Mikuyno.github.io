@@ -58,6 +58,7 @@
           newGame[selectedRow][selectedCol] = '';
           setGame(newGame);
           setSelectedSquare(null);
+          setStep(step +1);
         } else {
           if (game[row][col]) {
             setSelectedSquare([row, col]);
@@ -77,7 +78,7 @@
       return (
         <div>
           
-          <button> Which step</button>
+          <button> {step} </button>
           
           {game.map((row, rowIndex) => (
             <div key={rowIndex} style={{ display: 'flex' }}>
