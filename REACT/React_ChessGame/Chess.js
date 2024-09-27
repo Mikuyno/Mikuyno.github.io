@@ -69,15 +69,35 @@
 
       const [game, setGame] = React.useState(initialGameState);
       const [selectedSquare, setSelectedSquare] = React.useState(null);
-      const [turn, setTurn] = React.useState(initialTurn)
-      const [GameState, setGameState] = React.useState("running")
+      const [turn, setTurn] = React.useState(initialTurn);
+      const [GameState, setGameState] = React.useState("running");
+      const [Started, setStarted] = React.useState(false);
 
       return (
         <div>
           <TurnTrack turn={turn} />
-          <Board game={game} onSquareClick={handleClick} selectedSquare={selectedSquare} />
+          <Board game={game} onSquareClick={handleClick} selectedSquare={selectedSquare} Started={Started}/>
+          {!Started ? (
+            <button onClick={start}> Start Game</button>
+          ) : (<button onClick ={restart}>Restart Game</button>
+          )}
         </div>
       );
+
+      function start()
+      {
+        setStarted(true);
+      }
+
+      function restart()
+      {
+        setGame(initialGameState);
+        setSelectedSquare(null);
+        setTurn(initialTurn);
+        setStarted(true);
+        setGameState("running")
+
+      }
 
       // Handle square click for moving pieces
       function handleValidation(game, selectedrow, selectedcol, row, col, turn)
@@ -250,7 +270,7 @@
       }
     
       function handleClick(row, col) {
-        if(GameState=="checkmate")
+        if(GameState=="checkmate" || !Started)
         {
           return;
         }
@@ -292,16 +312,18 @@
     }
 
     // View: Board and buttons reflecting the game state
-    function Board({ game, onSquareClick, selectedSquare }) {
+    function Board({ game, onSquareClick, selectedSquare,Started }) {
       return (
         <div>
+
+
           {game.map((row, rowIndex) => (
             <div key={rowIndex} style={{ display: 'flex' }}>
               {row.map((value, colIndex) => (
                 <Square
                   key={colIndex}
                   value={value}
-                  onClick={() => onSquareClick(rowIndex, colIndex)}
+                  onClick={() => Started && onSquareClick(rowIndex, colIndex)}
                   isLight={(rowIndex + colIndex) % 2 === 0}
                   isSelected={selectedSquare && selectedSquare[0] === rowIndex && selectedSquare[1] === colIndex}
                 />
