@@ -55,10 +55,16 @@
     <img src="GameState.png"></img>
     <img src="KingCapFunc.png"></img>
     <img src="checkEnd.png"></img>
-    <p>As my last addition, I added text to speech to nearly every interaction in the game. I created a GameCords array mirroring the game array for the text to speech to read. Then I made a speak function with the parameter of sentence so I could simpily pass it any string in its call and it could be read by the text to speech. As for implementation, I made text and speech do the following: State start and restart of the game, say which piece is selected/deselected by the user and where, say which pieces move and where, say if a move was invalid to go along with the alert, say whos turn it is after a move, and say when the game ends and who won. I then added a button to toggle the text to speech on and off using another useState hook to set Speaking from true to false and a Speech function to call on click of the button</p>
+    <p>As my last addition, I added text to speech to nearly every interaction in the game. I created a GameCords array mirroring the game array for the text to speech to read. Then I made a speak function with parameters of sentence and Speaking so I could simpily pass it any string in its call and it could be read by the text to speech. As for implementation, I made text and speech do the following: State start and restart of the game, say which piece is selected/deselected by the user and where, say which pieces move and where, say if a move was invalid to go along with the alert, say whos turn it is after a move, and say when the game ends and who won. I then added a button to toggle the text to speech on and off using another useState hook to set Speaking from true to false and a Speech function to call on click of the button</p>
     <img src="SpeechFuncs.png"></img>
     <img src="GameCords.png"></img>
     <img src="SpeechEx.png"></img>
     <img src="SpeechToggleButton.png"></img>
+    <h3>Summary: </h3>
+    <br>
+    <p>The chess game features the qualities of basic chess without any special rules. All basic moves work as expected as well as capturing, capturing the king ends the game. The window will alert the user when making an invalid move or if someone wins. Text to speech is available for almost every action as well. There are start and restart buttons that show up depending on thier need and also a toggle text to speech function. The turn is also kept track of at the top of the screen.</p>  
+    <h3>Reflection: </h3>
+    <br>
+    <p>I found this assignment easier than the canvas game despite it being much more logic intensive. I feel like Javascript is coming to me easier and I even learned chess as a consequence of this assignment. React was not nearly as difficult to work with as the base canvas was. The most trouble I had was thinking of solutions for the movement of the pieces which resulted in a huge amount of code and logic to fully get basic movement working. in particular the algorithm to check if there were other pieces in the way of the piece being moved was very challenging as visualizing how to cover every piece's path checking in one function so I didnt have to code each pieces check separately took a long time. However, this was a valuable learning experience and it is clear that I am getting more comfortable applying the coding knowledge ive learned at this college. </p>
 </body>
 </html>
