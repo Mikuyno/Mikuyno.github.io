@@ -92,8 +92,8 @@
           <TurnTrack turn={turn} />
           <Board game={game} onSquareClick={handleClick} selectedSquare={selectedSquare} Started={Started}/>
           {!Started ? (
-            <button onClick={() => {start();speak("Started", Speaking);}}>Start Game</button>
-          ) : (<button onClick ={() => {restart(); speak("Restarted", Speaking);}}>Restart Game</button>
+            <button onClick={() => {start();speak("Started. White turn", Speaking);}}>Start Game</button>
+          ) : (<button onClick ={() => {restart(); speak("Restarted. White turn", Speaking);}}>Restart Game</button>
           )}
           <button onClick={speech}>Text-to-Speech toggle</button>
         </div>
@@ -338,42 +338,42 @@
             setTurn(nextTurn);
             switch(game[selectedRow][selectedCol]) {
               case 'p':
-                speak("Moved selected Black Pawn to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected Black Pawn to ".concat(GameCords[row][col]).concat(". White turn"), Speaking);
                 break;
               case 'P':
-                speak("Moved selected White Pawn to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected White Pawn to ".concat(GameCords[row][col]).concat(". Black turn"), Speaking);
                 break;
               case 'q':
-                speak("Moved selected Black Queen to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected Black Queen to ".concat(GameCords[row][col]).concat(". White turn"), Speaking);
                 break;
               case 'Q':
-                speak("Moved selected White Queen to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected White Queen to ".concat(GameCords[row][col]).concat(". Black turn"), Speaking);
                 break;
               case 'r':
-                speak("Moved selected Black Rook to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected Black Rook to ".concat(GameCords[row][col]).concat(". White turn"), Speaking);
                 break;
               case 'R':
-                speak("Moved selected White Rook to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected White Rook to ".concat(GameCords[row][col]).concat(". Black turn"), Speaking);
                 break;
               case 'k':
-                speak("Moved selected Black King to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected Black King to ".concat(GameCords[row][col]).concat(". White turn"), Speaking);
                 break;
               case 'K':
-                speak("Moved selected White King to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected White King to ".concat(GameCords[row][col]).concat(". Black turn"), Speaking);
                 break;
               case 'n':
-                speak("Moved selected Black Knight to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected Black Knight to ".concat(GameCords[row][col]).concat(". White turn"), Speaking);
                 break;
               case 'N':
-                speak("Moved selected White Knight to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected White Knight to ".concat(GameCords[row][col]).concat(". Black turn"), Speaking);
                 break;
               case 'b':
-                speak("Moved selected Black Bishop to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected Black Bishop to ".concat(GameCords[row][col]).concat(". White turn"), Speaking);
                 break;
               case 'B':
-                speak("Moved selected White Bishop to ".concat(GameCords[row][col]), Speaking);
+                speak("Moved selected White Bishop to ".concat(GameCords[row][col]).concat(". Black turn"), Speaking);
                 break;
-            }
+            }            
             
             
           }
