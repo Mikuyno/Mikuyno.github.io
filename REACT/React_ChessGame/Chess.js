@@ -10,6 +10,16 @@
       ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
     ];
 
+    const GameCords = [
+      [' A 8', ' B 8', ' C 8', ' D 8', ' E 8', ' F 8', ' G 8', ' H 8'],
+      [' A 7', ' B 7', ' C 7', ' D 7', ' E 7', ' F 7', ' G 7', ' H 7'],
+      [' A 6', ' B 6', ' C 6', ' D 6', ' E 6', ' F 6', ' G 6', ' H 6'],
+      [' A 5', ' B 5', ' C 5', ' D 5', ' E 5', ' F 5', ' G 5', ' H 5'],
+      [' A 4', ' B 4', ' C 4', ' D 4', ' E 4', ' F 4', ' G 4', ' H 4'],
+      [' A 3', ' B 3', ' C 3', ' D 3', ' E 3', ' F 3', ' G 3', ' H 3'],
+      [' A 2', ' B 2', ' C 2', ' D 2', ' E 2', ' F 2', ' G 2', ' H 2'],
+      [' A 1', ' B 1', ' C 1', ' D 1', ' E 1', ' F 1', ' G 1', ' H 1']
+    ];
     const pieceImages = {
       'r': 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg',
       'n': 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg',
@@ -65,6 +75,8 @@
       return true;
     }
 
+
+
     function Game() {
 
       const [game, setGame] = React.useState(initialGameState);
@@ -72,15 +84,18 @@
       const [turn, setTurn] = React.useState(initialTurn);
       const [GameState, setGameState] = React.useState("running");
       const [Started, setStarted] = React.useState(false);
+      const [Speaking, setSpeaking] = React.useState(false);
+      
 
       return (
         <div>
           <TurnTrack turn={turn} />
           <Board game={game} onSquareClick={handleClick} selectedSquare={selectedSquare} Started={Started}/>
           {!Started ? (
-            <button onClick={start}> Start Game</button>
-          ) : (<button onClick ={restart}>Restart Game</button>
+            <button onClick={() => {start();speak("Started", Speaking);}}>Start Game</button>
+          ) : (<button onClick ={() => {restart(); speak("Restarted", Speaking);}}>Restart Game</button>
           )}
+          <button onClick={speech}>Text-to-Speech toggle</button>
         </div>
       );
 
@@ -98,6 +113,36 @@
         setGameState("running")
 
       }
+
+      function speak(sentence, Speaking)
+      {
+        if (Speaking === false)
+        {
+          return;
+        }
+        const utterance = new SpeechSynthesisUtterance(sentence);
+        
+        const voices = speechSynthesis.getVoices();
+        utterance.voice = voices[0];
+        
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function speech()
+      {
+        if(Speaking === true)
+        {
+          speak("Text to speech off", Speaking);
+          setSpeaking(false);
+          return;
+        }
+        else
+        {
+          speak("Text to Speech on", true);
+          setSpeaking(true);
+        }
+      }
+
 
       // Handle square click for moving pieces
       function handleValidation(game, selectedrow, selectedcol, row, col, turn)
@@ -133,7 +178,7 @@
             
           }
 
-
+          
 
           switch(piece)
           {
@@ -183,7 +228,7 @@
                     }
                     else if(selectedrow == row + 1 && (selectedcol == col + 1 || selectedcol == col-1))
                     {
-                      if(selected == selected.toLowerCase(selected))
+                      if(selected == selected.toLowerCase(selected) && selected != '')
                       {
                         return true;
                       }
@@ -198,7 +243,7 @@
                 }
                 else if (piece =="P" && selectedrow == row + 1 && (selectedcol == col +1 || selectedcol == col-1))
                 {
-                  if (selected == selected.toLowerCase(selected))
+                  if (selected == selected.toLowerCase(selected) && selected != '')
                   {
                     return true;
                   }
@@ -265,6 +310,7 @@
           }
         }
         setGameState("checkmate")
+        speak(color== "white" ? "Checkmate. Black Wins!!" : "Checkmate. White Wins!!", Speaking)
         alert(color== "white" ? "Checkmate. Black Wins!!" : "Checkmate. White Wins!!")
         return;
       }
@@ -290,23 +336,146 @@
             KingCaptured(newGame, nextTurn)
             setSelectedSquare(null);
             setTurn(nextTurn);
+            switch(game[selectedRow][selectedCol]) {
+              case 'p':
+                speak("Moved selected Black Pawn to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'P':
+                speak("Moved selected White Pawn to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'q':
+                speak("Moved selected Black Queen to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'Q':
+                speak("Moved selected White Queen to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'r':
+                speak("Moved selected Black Rook to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'R':
+                speak("Moved selected White Rook to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'k':
+                speak("Moved selected Black King to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'K':
+                speak("Moved selected White King to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'n':
+                speak("Moved selected Black Knight to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'N':
+                speak("Moved selected White Knight to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'b':
+                speak("Moved selected Black Bishop to ".concat(GameCords[row][col]), Speaking);
+                break;
+              case 'B':
+                speak("Moved selected White Bishop to ".concat(GameCords[row][col]), Speaking);
+                break;
+            }
+            
+            
+          }
+          else if(game[selectedRow][selectedCol]== game[row][col])
+          {
+            setSelectedSquare(null);
+            switch(game[row][col])
+            {
+              case 'p':
+                speak("DeSelected Black Pawn on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'P':
+                speak("DeSelected White Pawn on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'q':
+                speak("DeSelected Black Queen on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'Q':
+                speak("DeSelected White Queen on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'r':
+                speak("DeSelected Black Rook on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'R':
+                speak("DeSelected White Rook on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'k':
+                speak("DeSelected Black King on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'K':
+                speak("DeSelected White King on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'n':
+                speak("DeSelected Black Knight on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'N':
+                speak("DeSelected White Knight on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'b':
+                speak("DeSelected Black Bishop on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'B':
+                speak("DeSelected White Bishop on".concat(GameCords[row][col]), Speaking)
+                break;
+            }
           }
           else
           {
-            alert("Invalid Move!!!");
+            speak("Invalid Move", Speaking)
+            alert("Invalid Move!!!")
             setSelectedSquare(null);
           }
         }
         else {
           if (game[row][col]) {
             setSelectedSquare([row, col]);
+            switch(game[row][col])
+            {
+              case 'p':
+                speak("Selected Black Pawn on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'P':
+                speak("Selected White Pawn on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'q':
+                speak("Selected Black Queen on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'Q':
+                speak("Selected White Queen on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'r':
+                speak("Selected Black Rook on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'R':
+                speak("Selected White Rook on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'k':
+                speak("Selected Black King on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'K':
+                speak("Selected White King on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'n':
+                speak("Selected Black Knight on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'N':
+                speak("Selected White Knight on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'b':
+                speak("Selected Black Bishop on".concat(GameCords[row][col]), Speaking)
+                break;
+              case 'B':
+                speak("Selected White Bishop on".concat(GameCords[row][col]), Speaking)
+                break;
+            }
           }
         }
       }
 
       return (
         <div>
-          <Board game={game} onSquareClick={handleClick} selectedSquare={selectedSquare} />
+          <Board game={game} onSquareClick={handleClick} selectedSquare={selectedSquare} Started={Started}/>
         </div>
       );
     }
