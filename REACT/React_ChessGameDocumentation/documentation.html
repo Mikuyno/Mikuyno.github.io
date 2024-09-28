@@ -34,11 +34,31 @@
     <p>Next I made the pawns able to move twice only if they are in thier starting positions to finish the basic movement logic.</p>
     <img src="PawnMove.png" alt="Pawn Movement"></img>
     <p>After basic movement logic, I wanted to work on allowing turns. So I created a new initial variable named initialturn and set it to white. Then I used a useState hook to store the current turn and then be able to set it, giving turn the initial value of initial turn. To handle making moves out of turn invalid, I turned to my validation function again, using the javascript toLowerCase and toUpperCase to check if turns are properly being taken (checking that we are not moving a lowercase piece on a white turn and vice versa) <br>
-    After writing this, I simply added the parameter turn to the validation function therefore making out of turn moves invalid. I used setTurn from the useState hook and a conditional statement to swap turns over. Also made selectedsquare == null after the alert so players wouldnt get stuck in a move invalid loop.</p>
+    After writing this, I simply added the parameter turn to the validation function therefore making out of turn moves invalid. I used setTurn from the useState hook and a conditional statement to swap turns over. Also made selectedsquare == null after the alert so players wouldnt get stuck in a move invalid loop</p>
     <img src="AddTurn.png" alt="Adding Turns"></img>
     <img src="SwitchTurn.png" alt="Turn Switching"></img>
     <p>After working turns, I felt this was a good place to implement path checking to the bishop, rook, and queen so that they dont jump over pieces. So, I made a PathCheck function that takes the current game state and the current/destination rows and columns. First I knew I needed a counter so I decided to use the Math.sign function to determine what direction each piece was trying to move based on row and column. Then I used those directions to track the current square in a while loop that loops until reaching the destination row and column of the piece, or if the square at game[currentrow][currentcol] was occupied, if it is occupied, the function returns false, but if there is nothing in the way, it returns true. <br>
     Then I simply called this function as a condition for the bishop, rook, and queen movement.</p>
     <img src="CheckPath.png" alt="Path check Function"></img>
+    <p>Then I added basic pawn movement with checking if a piece is one square diagonal away from a pawn and also checking if a piece is in front of a pawn blocking it</p>
+    <img src="PawnRestrict.png"></img>
+    <img src="PawnCapture.png"></img>
+    <p>Then I wanted a visual tracking of the turn. So I created a turn track function to be inserted into a div that displays the current turn. I defined its style and returned a div to be rendered later within another div.</p>
+    <img src="TurnTrackFunc.png"></img>
+    <p>I decided to insert the Turn tracker inside the div that renders the board and also insert any subsequent buttons into here. </p>
+    <img src="RenderTurnTrack.png"></img>
+    <p>After the turn tracking, I added a start and restart button each calling a respective function to start and restart the game. I created a new hook to cycle between a started state in order to allow my start and restart button to start the game. My start button simpily swaps started from false to true and my restart button reinitializes everything. </p>
+    <img src="Buttons.png"></img>
+    <p>Next I quickly fixed the pieces capturing thier own color.</p>
+    <img src="PrevOwnCap.png"></img>
+    <p>Finally, to finish the game I needed logic to capture the king and end the game. I created another hook to track the gameState of ongoing or checkmate and created a KingCaptured function with the parameters of game and color. This function attempts to find the king of the opposite color every turn (called in the handleClick function) and if it cannot find the king, Then the game must be finished as the king has been captured, setting the gamestate to checkmate which stops the game and alerts the user which color has won</p>
+    <img src="GameState.png"></img>
+    <img src="KingCapFunc.png"></img>
+    <img src="checkEnd.png"></img>
+    <p>As my last addition, I added text to speech to nearly every interaction in the game. I created a GameCords array mirroring the game array for the text to speech to read. Then I made a speak function with the parameter of sentence so I could simpily pass it any string in its call and it could be read by the text to speech. As for implementation, I made text and speech do the following: State start and restart of the game, say which piece is selected/deselected by the user and where, say which pieces move and where, say if a move was invalid to go along with the alert, say whos turn it is after a move, and say when the game ends and who won. I then added a button to toggle the text to speech on and off using another useState hook to set Speaking from true to false and a Speech function to call on click of the button</p>
+    <img src="SpeechFuncs.png"></img>
+    <img src="GameCords.png"></img>
+    <img src="SpeechEx.png"></img>
+    <img src="SpeechToggleButton.png"></img>
 </body>
 </html>
