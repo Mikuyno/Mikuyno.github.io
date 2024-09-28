@@ -310,6 +310,7 @@
           }
         }
         setGameState("checkmate")
+        setStarted(false)
         speak(color== "white" ? "Checkmate. Black Wins!!" : "Checkmate. White Wins!!", Speaking)
         alert(color== "white" ? "Checkmate. Black Wins!!" : "Checkmate. White Wins!!")
         return;
