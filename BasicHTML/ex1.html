@@ -1,7 +1,7 @@
 <p id="demo"></p>
-<table>
+<table id ="table_1>
 
-  <tr>
+  <tr >>
     <td>1</td>
     <td>1</td>
     <td>1</td>
@@ -18,4 +18,11 @@
 
 <script>
   document.getElementById("demo").innerHTML = "Hello World!";
+  table_pointer = document.getElementById("table_1").innerHTML = "Hello World!";
+  var row = table_pointer.insertRow(0);
+  for(col =1; col<10; col++)
+    {
+        var cellref = row.insertCell(col);
+        cellref.innerHTML = col;
+    }
 </script>
