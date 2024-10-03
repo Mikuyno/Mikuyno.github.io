@@ -195,7 +195,7 @@
                   }
                   else if(selectedrow == row - 1 && (selectedcol == col + 1 || selectedcol == col-1))
                   {
-                    if(selected == selected.toUpperCase(selected))
+                    if(selected == selected.toUpperCase(selected) && selected != '')
                     {
                       return true;
                     }
@@ -211,7 +211,7 @@
                 }
                 else if (piece =="p" && selectedrow == row - 1 && (selectedcol == col + 1 || selectedcol == col-1))
                   {
-                    if (selected == selected.toUpperCase(selected))
+                    if (selected == selected.toUpperCase(selected) && selected != '')
                     {
                       return true;
                     }
