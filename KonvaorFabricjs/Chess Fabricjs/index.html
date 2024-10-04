@@ -9,11 +9,30 @@
         canvas {
             border: 1px solid #000;
         }
+
+        #history {
+            width: 400px;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            margin-top: 10px;
+            padding: 5px;
+        }
+        #hud {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-<canvas id="canvas" width="600" height="600"></canvas>
-<script src="Chess.js"></script>
+    <div id="hud">
+        <div id="white-timer">White: 00:00</div>
+        <div id="black-timer">Black: 00:00</div>
+    </div>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <div id="history"></div>
+    <script src="Chess.js"></script>
     
 </body>
 </html>
