@@ -30,6 +30,16 @@ function updateTimerDisplay(color) {
     if (time <= 0) {
         clearInterval(timerInterval);
         alert(`${color.charAt(0).toUpperCase() + color.slice(1)} time's up!`);
+        if(color == "white")
+        {
+            whiteTime = 300;
+        }
+        else
+        {
+            blackTime = 300;
+        }
+        turn = turn === "white" ? "black" : "white";
+        startTimer();
     }
 }
 
