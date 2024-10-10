@@ -30,17 +30,18 @@ function updateTimerDisplay(color) {
     if (time <= 0) {
         clearInterval(timerInterval);
         alert(`${color.charAt(0).toUpperCase() + color.slice(1)} time's up!`);
-        if(color == "white")
-        {
-            whiteTime = 300;
-        }
-        else
-        {
-            blackTime = 300;
-        }
-        turn = turn === "white" ? "black" : "white";
-        startTimer();
+        declareWinner(color === "white" ? "black" : "white");
     }
+}
+
+function declareWinner(winnerColor)
+{
+    alert(`${winnerColor.charAt(0).toUpperCase() + winnerColor.slice(1)} wins!`);
+
+    canvas.forEachObject((obj) => {
+        obj.selectable = false;
+
+    });
 }
 
 // Create the chessboard
@@ -111,6 +112,7 @@ function addPieces() {
                         if (turn === this.pieceColor) {
                             this.set({ opacity: 0.5 });
                             canvas.setActiveObject(this);
+
                         }
                     });
 
@@ -130,20 +132,66 @@ function addPieces() {
 // Enable piece dragging and snapping
 canvas.on('object:modified', function(e) {
     const obj = e.target;
+
+    console.log("Object modified:", obj);
+    console.log("Original position:", obj.originalLeft, obj.originalTop);
+    console.log("New position:", obj.left, obj.top);
     if (obj && obj.pieceColor === turn) {
-        obj.set({
-            left: Math.round(obj.left / squareSize) * squareSize + squareSize / 2,
-            top: Math.round(obj.top / squareSize) * squareSize + squareSize / 2
-        });
-        obj.setCoords();
-        updateHistory(`${obj.pieceColor} moved to ${coordsToPosition(obj.left, obj.top)}`);
-        turn = turn === 'white' ? 'black' : 'white'; // Switch turn
-        startTimer(); // Restart timer for next turn
-    } else if (obj) {
+
+        let nLeft = Math.round(obj.left / squareSize) * squareSize + squareSize / 2;
+        let nTop = Math.round(obj.top / squareSize) * squareSize + squareSize / 2;
+
+        let minleft = 0 + squareSize/2;
+        let maxleft = 7 * squareSize + squareSize/2;
+        let mintop = 0 + squareSize/2;
+        let maxtop= 7 * squareSize + squareSize/2;
+
+        console.log(`Checking bounds: ${nLeft}, ${nTop}`);
+
+        if (nLeft < minleft || nLeft > maxleft || nTop < mintop || nTop > maxtop) {
+            console.log("Move out of bounds. Resetting position.");
+            obj.set({
+                left: obj.originalLeft,
+                top: obj.originalTop,
+                selectable: true
+            });
+            canvas.setActiveObject(obj);
+            obj.setCoords();
+        } 
+        else 
+        {
+            obj.set({
+                left: nLeft,
+                top: nTop
+            });
+            if(nLeft != obj.originalLeft || nTop != obj.originalTop) {
+                console.log("Valid move. Updating position.");
+                obj.setCoords();
+                updateHistory(`${obj.pieceColor} moved to ${coordsToPosition(nLeft, nTop)}`);
+                turn = turn === 'white' ? 'black' : 'white'; // Switch turn
+                startTimer(); // Restart timer for next turn
+            }
+            else
+            {
+                obj.set({
+                    selectable: true
+                });
+            }
+
+            obj.originalLeft = nLeft;
+            obj.originalTop = nTop;
+        }
+    } 
+    else if (obj) 
+    {
+        console.log("Invalid move. Resetting to original position.");
         obj.set({
             left: obj.originalLeft,
-            top: obj.originalTop
+            top: obj.originalTop,
+            selectable: true
         });
+        canvas.setActiveObject(obj);
+        obj.setCoords();
     }
     canvas.renderAll();
 });
