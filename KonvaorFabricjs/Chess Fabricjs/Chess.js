@@ -52,7 +52,7 @@ function createChessboard() {
             const square = new fabric.Rect({
                 left: col * squareSize,
                 top: row * squareSize,
-                fill: isLightSquare ? '#eee' : '#8B4513',
+                fill: isLightSquare ? 'aliceblue' : 'purple',
                 width: squareSize,
                 height: squareSize,
                 selectable: false
@@ -79,6 +79,8 @@ function addPieces() {
         'P': 'https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg'
     };
 
+
+
     const boardState = [
         ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
         ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
@@ -89,6 +91,29 @@ function addPieces() {
         ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
         ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
     ];
+
+    function piecestoreal(piece)
+    {
+        switch(piece)
+        {
+            case "P":
+            case "p":
+                return "pawn"
+            case "R":
+            case "r":
+                return "rook"     
+            case "K":
+            case "k":
+                return "king"
+            case "Q":
+            case "q":
+                return "queen"  
+            case "B":  
+            case "b":
+                return "bishop"    
+        }
+
+    }
 
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
@@ -105,9 +130,10 @@ function addPieces() {
                         selectable: true,
                         pieceColor: piece === piece.toUpperCase() ? 'white' : 'black',
                         originalLeft: col * squareSize + squareSize / 2,
-                        originalTop: row * squareSize + squareSize / 2
+                        originalTop: row * squareSize + squareSize / 2,
+                        piece: piecestoreal(piece)
                     });
-
+  
                     svgPiece.on('mousedown', function() {
                         if (turn === this.pieceColor) {
                             this.set({ opacity: 0.5 });
@@ -133,9 +159,9 @@ function addPieces() {
 canvas.on('object:modified', function(e) {
     const obj = e.target;
 
-    console.log("Object modified:", obj);
+    /*console.log("Object modified:", obj);
     console.log("Original position:", obj.originalLeft, obj.originalTop);
-    console.log("New position:", obj.left, obj.top);
+    console.log("New position:", obj.left, obj.top);*/
     if (obj && obj.pieceColor === turn) {
 
         let nLeft = Math.round(obj.left / squareSize) * squareSize + squareSize / 2;
@@ -146,17 +172,16 @@ canvas.on('object:modified', function(e) {
         let mintop = 0 + squareSize/2;
         let maxtop= 7 * squareSize + squareSize/2;
 
-        console.log(`Checking bounds: ${nLeft}, ${nTop}`);
+        //console.log(`Checking bounds: ${nLeft}, ${nTop}`);
 
         if (nLeft < minleft || nLeft > maxleft || nTop < mintop || nTop > maxtop) {
-            console.log("Move out of bounds. Resetting position.");
+            //console.log("Move out of bounds. Resetting position.");
             obj.set({
                 left: obj.originalLeft,
                 top: obj.originalTop,
                 selectable: true
             });
             canvas.setActiveObject(obj);
-            obj.setCoords();
         } 
         else 
         {
@@ -165,9 +190,9 @@ canvas.on('object:modified', function(e) {
                 top: nTop
             });
             if(nLeft != obj.originalLeft || nTop != obj.originalTop) {
-                console.log("Valid move. Updating position.");
-                obj.setCoords();
-                updateHistory(`${obj.pieceColor} moved to ${coordsToPosition(nLeft, nTop)}`);
+                //console.log("Valid move. Updating position.");
+                
+                updateHistory(`${obj.pieceColor} ${obj.piece} moved to ${coordsToPosition(nLeft, nTop)}`);
                 turn = turn === 'white' ? 'black' : 'white'; // Switch turn
                 startTimer(); // Restart timer for next turn
             }
@@ -184,7 +209,7 @@ canvas.on('object:modified', function(e) {
     } 
     else if (obj) 
     {
-        console.log("Invalid move. Resetting to original position.");
+        //console.log("Invalid move. Resetting to original position.");
         obj.set({
             left: obj.originalLeft,
             top: obj.originalTop,
@@ -193,6 +218,7 @@ canvas.on('object:modified', function(e) {
         canvas.setActiveObject(obj);
         obj.setCoords();
     }
+    obj.setCoords();
     canvas.renderAll();
 });
 
@@ -211,7 +237,7 @@ function updateHistory(move) {
 }
 
 // Move piece with keyboard
-window.addEventListener('keydown', function(event) {
+/*window.addEventListener('keydown', function(event) {
     if (event.key.match(/[a-h][1-8]/)) { // Check for valid square
         const from = prompt("Enter the piece's current position (e.g., e2):");
         if (from) {
@@ -239,12 +265,13 @@ function movePiece(from, to) {
         turn = turn === 'white' ? 'black' : 'white';
         startTimer(); // Restart timer for the next player
     }
-}
+}*/
+//May use these in the future
 
 // Convert position to coordinates
 function positionToCoords(position) {
     const col = position.charCodeAt(0) - 'a'.charCodeAt(0);
-    const row = 8 - parseInt(position[1]);
+    const row = 7 - parseInt(position[1]);
     return {
         x: col * squareSize + squareSize / 2,
         y: row * squareSize + squareSize / 2
