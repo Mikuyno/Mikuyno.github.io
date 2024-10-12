@@ -62,6 +62,53 @@ function createChessboard() {
     }
 }
 
+function PathCheck()
+{
+
+}
+
+function MoveValidation(piece, fromrow, fromcol, torow, tocol)
+{
+    pieceType = piece.type;
+    switch(pieceType)
+    {
+        case "P":
+            if(fromcol === tocol && fromrow - 1 === torow)
+                return true;
+                break;
+        case "p":
+            if(fromcol === tocol && fromrow + 1 === torow)
+                return true;
+                break;
+        case "R":
+        case "r":
+            if((torow >=0 && torow <=7 && fromcol === tocol) || (tocol >=0 && tocol <=7 && fromrow === torow))
+                return true;
+                break;
+        case "k":
+        case "K":
+            if((torow == fromrow+1 || torow == fromrow-1 || torow == fromrow) && (tocol == fromcol+1 || tocol == fromcol-1 || tocol == fromcol))
+                return true;
+                break;
+        case "B":
+        case "b":
+            if(Math.abs(torow - fromrow) === Math.abs(tocol-fromcol))
+                return true;
+                break;
+        case "Q":
+        case "q":
+            if(((torow >=0 && torow <=7 && fromcol === tocol) || (tocol >=0 && tocol <=7 && fromrow === torow)) || ((torow == fromrow+1 || torow == fromrow-1 || torow == fromrow) && (tocol == fromcol+1 || tocol == fromcol-1 || tocol == fromcol)) || (Math.abs(torow - fromrow) === Math.abs(tocol-fromcol)))
+                return true;
+                break;
+        case "N":
+        case "n":
+            if(((tocol === fromcol +1 || tocol === fromcol -1) && (torow === fromrow +2 || torow === fromrow -2 ) || (torow === fromrow +1 || torow === fromrow -1) && (tocol === fromcol +2 || tocol === fromcol -2)))
+                return true;
+                break;
+    }
+}
+
+
 // Load SVG pieces onto the chessboard
 function addPieces() {
     const pieces = {
@@ -111,9 +158,14 @@ function addPieces() {
             case "B":  
             case "b":
                 return "bishop"    
+            case "N":
+            case "n":
+                return "knight"
         }
 
     }
+
+
 
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
@@ -131,7 +183,8 @@ function addPieces() {
                         pieceColor: piece === piece.toUpperCase() ? 'white' : 'black',
                         originalLeft: col * squareSize + squareSize / 2,
                         originalTop: row * squareSize + squareSize / 2,
-                        piece: piecestoreal(piece)
+                        type: piece,
+                        Real_piece: piecestoreal(piece)
                     });
   
                     svgPiece.on('mousedown', function() {
@@ -172,7 +225,14 @@ canvas.on('object:modified', function(e) {
         let mintop = 0 + squareSize/2;
         let maxtop= 7 * squareSize + squareSize/2;
 
+        let fromrow = Math.floor(obj.originalTop/squareSize);
+        let fromcol = Math.floor(obj.originalLeft/squareSize);
+        let torow = Math.floor(nTop/squareSize);
+        let tocol = Math.floor(nLeft/squareSize);
+
         //console.log(`Checking bounds: ${nLeft}, ${nTop}`);
+
+        console.log(`${fromcol}, ${tocol}, ${fromrow}, ${torow}`)
 
         if (nLeft < minleft || nLeft > maxleft || nTop < mintop || nTop > maxtop) {
             //console.log("Move out of bounds. Resetting position.");
@@ -183,6 +243,15 @@ canvas.on('object:modified', function(e) {
             });
             canvas.setActiveObject(obj);
         } 
+        else if(!MoveValidation(obj, fromrow, fromcol, torow, tocol))
+        {
+            alert("Invalid Move.");
+            obj.set({
+                left: obj.originalLeft,
+                top: obj.originalTop,
+                selectable: true
+            });
+        }
         else 
         {
             obj.set({
@@ -192,7 +261,7 @@ canvas.on('object:modified', function(e) {
             if(nLeft != obj.originalLeft || nTop != obj.originalTop) {
                 //console.log("Valid move. Updating position.");
                 
-                updateHistory(`${obj.pieceColor} ${obj.piece} moved to ${coordsToPosition(nLeft, nTop)}`);
+                updateHistory(`${obj.pieceColor} ${obj.Real_piece} moved to ${coordsToPosition(nLeft, nTop)}`);
                 turn = turn === 'white' ? 'black' : 'white'; // Switch turn
                 startTimer(); // Restart timer for next turn
             }
@@ -282,4 +351,6 @@ function positionToCoords(position) {
 createChessboard();
 addPieces();
 startTimer();
+
+
 
