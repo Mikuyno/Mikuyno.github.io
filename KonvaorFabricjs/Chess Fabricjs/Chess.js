@@ -62,14 +62,39 @@ function createChessboard() {
     }
 }
 
+function getPieceatPosition(row, col)
+{
+    let left_target = col * squareSize + squareSize/2;
+    let top_target = row * squareSize + squareSize/2;
+    let target_piece = null;
+
+    canvas.forEachObject((obj) => 
+    {
+        if(obj.type && obj.left === left_target && obj.top === top_target)
+        {
+            target_piece = obj;
+        }
+    })
+
+    return target_piece;
+}
+
 function PathCheck()
 {
 
 }
 
-function MoveValidation(piece, fromrow, fromcol, torow, tocol)
+function MoveValidation(piece, fromrow, fromcol, torow, tocol,turn)
 {
     pieceType = piece.type;
+    targetPiece = getPieceatPosition(torow, tocol);
+    
+    if (targetPiece && targetPiece.pieceColor === turn)
+    {
+        return false;
+    }
+
+
     switch(pieceType)
     {
         case "P":
@@ -185,6 +210,7 @@ function addPieces() {
                         originalTop: row * squareSize + squareSize / 2,
                         type: piece,
                         Real_piece: piecestoreal(piece)
+
                     });
   
                     svgPiece.on('mousedown', function() {
@@ -233,6 +259,7 @@ canvas.on('object:modified', function(e) {
         //console.log(`Checking bounds: ${nLeft}, ${nTop}`);
 
         console.log(`${fromcol}, ${tocol}, ${fromrow}, ${torow}`)
+        
 
         if (nLeft < minleft || nLeft > maxleft || nTop < mintop || nTop > maxtop) {
             //console.log("Move out of bounds. Resetting position.");
@@ -243,7 +270,7 @@ canvas.on('object:modified', function(e) {
             });
             canvas.setActiveObject(obj);
         } 
-        else if(!MoveValidation(obj, fromrow, fromcol, torow, tocol))
+        else if(!MoveValidation(obj, fromrow, fromcol, torow, tocol, turn))
         {
             alert("Invalid Move.");
             obj.set({
