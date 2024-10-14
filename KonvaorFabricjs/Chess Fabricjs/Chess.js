@@ -136,13 +136,81 @@ function MoveValidation(piece, fromrow, fromcol, torow, tocol,turn)
     switch(pieceType)
     {
         case "P":
-            if(fromcol === tocol && fromrow - 1 === torow)
-                return true;
-                break;
+            if(fromrow === 6)
+            {
+                if(fromcol === tocol && (fromrow - 1 === torow || fromrow - 2 === torow))
+                {
+                    if(targetPiece)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return PathCheck(fromrow,fromcol,torow,tocol);
+                    }  
+                } 
+            }
+            else
+            {
+                if(fromcol === tocol && fromrow - 1 === torow)
+                {
+                    if(targetPiece)
+                    {
+                        return false
+                        
+                    }
+                    else
+                    {
+                        return true;
+                    
+                    } 
+                } 
+                else if (Math.abs(tocol - fromcol) === 1 && fromrow - 1 === torow && targetPiece)
+                {
+                    if(targetPiece.pieceColor != turn)
+                    {
+                        return true;
+                    }
+                }  
+            }
+            break;
         case "p":
-            if(fromcol === tocol && fromrow + 1 === torow)
-                return true;
-                break;
+            if(fromrow === 1)
+            {
+                if(fromcol === tocol && (fromrow + 1 === torow || fromrow + 2 === torow))
+                {
+                    if(targetPiece)
+                    {
+                        return false
+                    }
+                    else
+                    {
+                        return PathCheck(fromrow,fromcol,torow,tocol);
+                    }  
+                } 
+            }
+            else
+            {
+                if(fromcol === tocol && fromrow + 1 === torow)
+                {
+                    if(targetPiece)
+                    {
+                        return false
+                    }
+                    else
+                    {
+                        return true;
+                    }  
+                }
+                else if (Math.abs(tocol - fromcol) === 1 && fromrow + 1 === torow && targetPiece)
+                {
+                    if(targetPiece.pieceColor != turn)
+                    {
+                        return true;
+                    }
+                } 
+            }
+            break;
         case "R":
         case "r":
             if((torow >=0 && torow <=7 && fromcol === tocol) || (tocol >=0 && tocol <=7 && fromrow === torow))
@@ -332,11 +400,13 @@ canvas.on('object:modified', function(e) {
                     if(toPiece.type === "K" || toPiece.type === "k")
                     {
                         updateHistory(`${obj.pieceColor} ${obj.Real_piece} captured ${toPiece.pieceColor}'s king.`);
+                        canvas.remove(toPiece);
                         declareWinner(obj.pieceColor);
                     }
                     else
                     {
-                        updateHistory(`${obj.pieceColor} ${obj.Real_piece} moved to ${coordsToPosition(nLeft, nTop)}`);
+                        updateHistory(`${obj.pieceColor} ${obj.Real_piece} captured ${toPiece.pieceColor}'s ${toPiece.Real_piece} at ${coordsToPosition(nLeft, nTop)}`);
+                        canvas.remove(toPiece);
                         turn = turn === 'white' ? 'black' : 'white'; // Switch turn
                         startTimer(); // Restart timer for next turn
                     }
