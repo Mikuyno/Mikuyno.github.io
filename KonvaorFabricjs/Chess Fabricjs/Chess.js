@@ -37,6 +37,9 @@ function restartGame()
     history.length = 0;
     document.getElementById("history").innerHTML = ''
 
+    document.getElementById("white-timer").innerHTML = 'White: 00:00'
+    document.getElementById("black-timer").innerHTML = 'Black: 00:00'
+
     startGame();
 }
 
