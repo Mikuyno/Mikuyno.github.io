@@ -79,9 +79,47 @@ function getPieceatPosition(row, col)
     return target_piece;
 }
 
-function PathCheck()
+function PathCheck(fromrow, fromcol, torow, tocol)
 {
+    let notBlocked = true;
 
+    const rowDir = Math.sign(torow - fromrow);
+    const colDir = Math.sign(tocol - fromcol);
+
+    if(fromrow === torow || fromcol === tocol)
+    {
+        let currentrow = fromrow + rowDir;
+        let currentcol = fromcol + colDir;
+
+        while(currentrow != torow || currentcol != tocol)
+        {
+            if(getPieceatPosition(currentrow, currentcol))
+            {
+                notBlocked = false;
+                break;
+            }
+            currentcol += colDir;
+            currentrow += rowDir;
+        }
+    }
+    else if(Math.abs(fromrow - torow) === Math.abs(fromcol - tocol))
+    {
+        let currentrow = fromrow + rowDir;
+        let currentcol = fromcol + colDir;
+
+        while(currentrow != torow && currentcol != tocol)
+        {
+            if(getPieceatPosition(currentrow, currentcol))
+            {
+                notBlocked = false;
+                break;
+            }
+            currentcol += colDir;
+            currentrow += rowDir;
+        }
+    }
+    
+    return notBlocked;
 }
 
 function MoveValidation(piece, fromrow, fromcol, torow, tocol,turn)
@@ -108,7 +146,7 @@ function MoveValidation(piece, fromrow, fromcol, torow, tocol,turn)
         case "R":
         case "r":
             if((torow >=0 && torow <=7 && fromcol === tocol) || (tocol >=0 && tocol <=7 && fromrow === torow))
-                return true;
+                return PathCheck(fromrow, fromcol, torow, tocol);
                 break;
         case "k":
         case "K":
@@ -118,12 +156,12 @@ function MoveValidation(piece, fromrow, fromcol, torow, tocol,turn)
         case "B":
         case "b":
             if(Math.abs(torow - fromrow) === Math.abs(tocol-fromcol))
-                return true;
+                return PathCheck(fromrow, fromcol, torow, tocol);
                 break;
         case "Q":
         case "q":
             if(((torow >=0 && torow <=7 && fromcol === tocol) || (tocol >=0 && tocol <=7 && fromrow === torow)) || ((torow == fromrow+1 || torow == fromrow-1 || torow == fromrow) && (tocol == fromcol+1 || tocol == fromcol-1 || tocol == fromcol)) || (Math.abs(torow - fromrow) === Math.abs(tocol-fromcol)))
-                return true;
+                return PathCheck(fromrow, fromcol, torow, tocol);
                 break;
         case "N":
         case "n":
