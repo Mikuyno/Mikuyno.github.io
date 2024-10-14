@@ -294,6 +294,8 @@ canvas.on('object:modified', function(e) {
         let torow = Math.floor(nTop/squareSize);
         let tocol = Math.floor(nLeft/squareSize);
 
+        toPiece = getPieceatPosition(torow, tocol);
+
         //console.log(`Checking bounds: ${nLeft}, ${nTop}`);
 
         console.log(`${fromcol}, ${tocol}, ${fromrow}, ${torow}`)
@@ -324,11 +326,28 @@ canvas.on('object:modified', function(e) {
                 top: nTop
             });
             if(nLeft != obj.originalLeft || nTop != obj.originalTop) {
-                //console.log("Valid move. Updating position.");
-                
-                updateHistory(`${obj.pieceColor} ${obj.Real_piece} moved to ${coordsToPosition(nLeft, nTop)}`);
-                turn = turn === 'white' ? 'black' : 'white'; // Switch turn
-                startTimer(); // Restart timer for next turn
+                console.log("Valid move. Updating position.");
+                if(toPiece)  
+                {
+                    if(toPiece.type === "K" || toPiece.type === "k")
+                    {
+                        updateHistory(`${obj.pieceColor} ${obj.Real_piece} captured ${toPiece.pieceColor}'s king.`);
+                        declareWinner(obj.pieceColor);
+                    }
+                    else
+                    {
+                        updateHistory(`${obj.pieceColor} ${obj.Real_piece} moved to ${coordsToPosition(nLeft, nTop)}`);
+                        turn = turn === 'white' ? 'black' : 'white'; // Switch turn
+                        startTimer(); // Restart timer for next turn
+                    }
+                }
+                else
+                {
+                    updateHistory(`${obj.pieceColor} ${obj.Real_piece} moved to ${coordsToPosition(nLeft, nTop)}`);
+                    turn = turn === 'white' ? 'black' : 'white'; // Switch turn
+                    startTimer(); // Restart timer for next turn
+                }
+
             }
             else
             {
