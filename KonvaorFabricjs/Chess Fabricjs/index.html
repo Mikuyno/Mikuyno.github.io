@@ -26,6 +26,7 @@
     </style>
 </head>
 <body>
+    <audio src="ChessMove.mp3" id="Move"></audio>
     <div id="hud">
         <div id="white-timer">White: 00:00</div>
         <div id="black-timer">Black: 00:00</div>
@@ -33,6 +34,8 @@
     <canvas id="canvas" width="600" height="600"></canvas>
     <div id="history"></div>
     <script src="Chess.js"></script>
+    <button onclick = "startGame()">Start</button>
+    <button onclick = "restartGame()">Restart Game</button>
     
 </body>
 </html>

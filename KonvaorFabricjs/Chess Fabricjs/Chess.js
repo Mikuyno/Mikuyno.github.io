@@ -6,6 +6,39 @@ const history = [];
 let whiteTime = 300; // 5 minutes for each player
 let blackTime = 300;
 let timerInterval;
+let Started = false;
+
+document.addEventListener("DOMContentLoaded", function(){
+    Move = document.getElementById("Move");
+});
+
+function startGame()
+{
+    if(Started)
+    {
+        return;
+    }
+    Started = true;
+    // Initialize chessboard, pieces, and timer
+    createChessboard();
+    addPieces();
+    startTimer();
+}
+
+function restartGame()
+{
+    canvas.clear();
+    turn = "white"
+    whiteTime = 300;
+    blackTime = 300;
+    clearInterval(timerInterval);
+    Started = false;
+
+    history.length = 0;
+    document.getElementById("history").innerHTML = ''
+
+    startGame();
+}
 
 // Initialize timers
 function startTimer() {
@@ -20,6 +53,8 @@ function startTimer() {
         }
     }, 1000);
 }
+
+
 
 function updateTimerDisplay(color) {
     const timerElement = document.getElementById(`${color}-timer`);
@@ -239,7 +274,6 @@ function MoveValidation(piece, fromrow, fromcol, torow, tocol,turn)
     }
 }
 
-
 // Load SVG pieces onto the chessboard
 function addPieces() {
     const pieces = {
@@ -340,6 +374,7 @@ function addPieces() {
     }
 }
 
+
 // Enable piece dragging and snapping
 canvas.on('object:modified', function(e) {
     const obj = e.target;
@@ -399,12 +434,14 @@ canvas.on('object:modified', function(e) {
                 {
                     if(toPiece.type === "K" || toPiece.type === "k")
                     {
+                        Move.play();
                         updateHistory(`${obj.pieceColor} ${obj.Real_piece} captured ${toPiece.pieceColor}'s king.`);
                         canvas.remove(toPiece);
                         declareWinner(obj.pieceColor);
                     }
                     else
                     {
+                        Move.play();
                         updateHistory(`${obj.pieceColor} ${obj.Real_piece} captured ${toPiece.pieceColor}'s ${toPiece.Real_piece} at ${coordsToPosition(nLeft, nTop)}`);
                         canvas.remove(toPiece);
                         turn = turn === 'white' ? 'black' : 'white'; // Switch turn
@@ -413,6 +450,7 @@ canvas.on('object:modified', function(e) {
                 }
                 else
                 {
+                    Move.play();
                     updateHistory(`${obj.pieceColor} ${obj.Real_piece} moved to ${coordsToPosition(nLeft, nTop)}`);
                     turn = turn === 'white' ? 'black' : 'white'; // Switch turn
                     startTimer(); // Restart timer for next turn
@@ -459,38 +497,6 @@ function updateHistory(move) {
     historyDiv.innerHTML = history.join('<br/>');
 }
 
-// Move piece with keyboard
-/*window.addEventListener('keydown', function(event) {
-    if (event.key.match(/[a-h][1-8]/)) { // Check for valid square
-        const from = prompt("Enter the piece's current position (e.g., e2):");
-        if (from) {
-            movePiece(from, event.key);
-        }
-    }
-});
-
-// Function to move piece based on input
-function movePiece(from, to) {
-    const piece = canvas.getActiveObject();
-    if (!piece) return;
-
-    const fromCoords = positionToCoords(from);
-    const toCoords = positionToCoords(to);
-
-    if (piece && piece.left === fromCoords.x && piece.top === fromCoords.y) {
-        piece.set({
-            left: toCoords.x,
-            top: toCoords.y,
-        });
-        piece.setCoords();
-        canvas.renderAll();
-        updateHistory(`${piece.pieceColor} moves from ${from} to ${to}`);
-        turn = turn === 'white' ? 'black' : 'white';
-        startTimer(); // Restart timer for the next player
-    }
-}*/
-//May use these in the future
-
 // Convert position to coordinates
 function positionToCoords(position) {
     const col = position.charCodeAt(0) - 'a'.charCodeAt(0);
@@ -501,10 +507,7 @@ function positionToCoords(position) {
     };
 }
 
-// Initialize chessboard, pieces, and timer
-createChessboard();
-addPieces();
-startTimer();
+
 
 
 
