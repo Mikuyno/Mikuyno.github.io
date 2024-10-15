@@ -27,12 +27,16 @@ function startGame()
 
 function restartGame()
 {
+    if(!Started)
+    {
+        return;
+    }
     canvas.clear();
     turn = "white"
     whiteTime = 300;
     blackTime = 300;
     clearInterval(timerInterval);
-    Started = false;
+    Started = false; 
 
     history.length = 0;
     document.getElementById("history").innerHTML = ''
