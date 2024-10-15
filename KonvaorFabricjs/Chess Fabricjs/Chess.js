@@ -79,6 +79,7 @@ function updateTimerDisplay(color) {
 function declareWinner(winnerColor)
 {
     alert(`${winnerColor.charAt(0).toUpperCase() + winnerColor.slice(1)} wins!`);
+    updateHistory(`${winnerColor.charAt(0).toUpperCase() + winnerColor.slice(1)} wins!`);
 
     canvas.forEachObject((obj) => {
         obj.selectable = false;
@@ -441,22 +442,27 @@ canvas.on('object:modified', function(e) {
                 {
                     if(toPiece.type === "K" || toPiece.type === "k")
                     {
+                        Move.currentTime = 0;
                         Move.play();
                         updateHistory(`${obj.pieceColor} ${obj.Real_piece} captured ${toPiece.pieceColor}'s king.`);
                         canvas.remove(toPiece);
                         declareWinner(obj.pieceColor);
+                        
                     }
                     else
                     {
+                        Move.currentTime = 0;
                         Move.play();
                         updateHistory(`${obj.pieceColor} ${obj.Real_piece} captured ${toPiece.pieceColor}'s ${toPiece.Real_piece} at ${coordsToPosition(nLeft, nTop)}`);
                         canvas.remove(toPiece);
                         turn = turn === 'white' ? 'black' : 'white'; // Switch turn
                         startTimer(); // Restart timer for next turn
+                        
                     }
                 }
                 else
                 {
+                    Move.currentTime = 0;
                     Move.play();
                     updateHistory(`${obj.pieceColor} ${obj.Real_piece} moved to ${coordsToPosition(nLeft, nTop)}`);
                     turn = turn === 'white' ? 'black' : 'white'; // Switch turn
