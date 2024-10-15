@@ -81,6 +81,7 @@ function declareWinner(winnerColor)
     alert(`${winnerColor.charAt(0).toUpperCase() + winnerColor.slice(1)} wins!`);
     updateHistory(`${winnerColor.charAt(0).toUpperCase() + winnerColor.slice(1)} wins!`);
 
+    clearInterval(timerInterval);
     canvas.forEachObject((obj) => {
         obj.selectable = false;
 
