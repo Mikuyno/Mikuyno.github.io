@@ -283,6 +283,95 @@ function MoveValidation(piece, fromrow, fromcol, torow, tocol,turn)
     }
 }
 
+function showMenu(pawn)
+{
+    console.log("Showing Menu");
+    const Menu = document.createElement("div");
+
+    Menu.id = "Menu";
+
+    Menu.innerHTML = `
+        <button onclick = "promotePawn('${pawn.type}', 'Q', '${pawn.left}', '${pawn.top}')"> Queen </button>
+        <button onclick = "promotePawn('${pawn.type}', 'R', '${pawn.left}', '${pawn.top}')"> Rook </button>
+        <button onclick = "promotePawn('${pawn.type}', 'B', '${pawn.left}', '${pawn.top}')"> Bishop </button>
+        <button onclick = "promotePawn('${pawn.type}', 'N', '${pawn.left}', '${pawn.top}')"> Knight </button>
+    `;
+
+    document.body.appendChild(Menu);
+}
+
+function promotePawn(orgType, newType, left, top)
+{
+    const color = orgType === orgType.toUpperCase() ? "white" : "black";
+    const pieces = {
+        'r': 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg',
+        'n': 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg',
+        'b': 'https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg',
+        'q': 'https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg',
+        'k': 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg',
+        'p': 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg',
+        'R': 'https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg',
+        'N': 'https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg',
+        'B': 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg',
+        'Q': 'https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg',
+        'K': 'https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg',
+        'P': 'https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg'
+    };
+
+    
+    function piecestoreal(piece)
+    {
+        switch(piece)
+        {
+            case "P":
+            case "p":
+                return "pawn"
+            case "R":
+            case "r":
+                return "rook"     
+            case "K":
+            case "k":
+                return "king"
+            case "Q":
+            case "q":
+                return "queen"  
+            case "B":  
+            case "b":
+                return "bishop"    
+            case "N":
+            case "n":
+                return "knight"
+        }
+
+    }
+
+    const pawn = getPieceatPosition(top/squareSize -0.5, left/squareSize -0.5);
+    canvas.remove(pawn);
+
+    fabric.loadSVGFromURL(pieces[newType], function(objects, options)
+    {
+        const newPiece = fabric.util.groupSVGElements(objects, options);
+        console.log("setting piece");
+        newPiece.set({
+            left: left -0.5,
+            top: top -0.5, 
+            originX: 'center',
+            originY: 'center',
+            hasControls: false,
+            selectable: true,
+            pieceColor: color,
+            type: newType,
+            originalLeft: left -0.5,
+            originalTop: top -0.5,
+            Real_piece: piecestoreal(newType)
+        });
+        canvas.add(newPiece);
+    });
+    console.log("Promoting pawn at: ", left, top)
+
+    document.getElementById('Menu').remove();
+}
+
 // Load SVG pieces onto the chessboard
 function addPieces() {
     const pieces = {
@@ -439,6 +528,11 @@ canvas.on('object:modified', function(e) {
             });
             if(nLeft != obj.originalLeft || nTop != obj.originalTop) {
                 console.log("Valid move. Updating position.");
+                if ((obj.type === "P" && torow === 0) || (obj.type === "p" && torow === 7)) {
+                    console.log("Promoting pawn")
+                    showMenu(obj);
+                }
+
                 if(toPiece)  
                 {
                     if(toPiece.type === "K" || toPiece.type === "k")
