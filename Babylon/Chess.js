@@ -109,16 +109,96 @@ pieces.push(createPiece("king", new BABYLON.Vector3(0.5, 0.5, -3.5), new BABYLON
 
 let selectedPiece = null;
 
+const getPiece = (selected_tile) => {
+    for(let piece of pieces){
+        if(piece.position.x === selected_tile.position.x && piece.position.z === selected_tile.position.z)
+        {
+            return piece;
+        }
+    }
+    return null;
+}
+
+
+const ValidMove = (piece, selected_tile) => {
+    const startx = piece.position.x;
+    const startz = piece.position.z;
+    const targetx = selected_tile.position.x;
+    const targetz = selected_tile.position.z;
+    const targetPiece = getPiece(selected_tile);
+
+    if(targetPiece)
+    {
+        if(targetPiece.colorName === piece.colorName || targetPiece === piece)
+        {
+            return false;
+        }
+    }
+
+    switch(piece.name){
+        case "pawn":
+            if (piece.colorName === "white")
+            {
+                if ((targetz === startz - 1 && targetx === startx) || (startz === 2.5 && targetz === startz - 2 && targetx === startx)) 
+                {
+                    return true;
+                }
+            }
+            else if (piece.colorName === "black")
+            {
+                if((targetz === startz + 1 && targetx === startx) || (startz === -2.5 && targetz === startz + 2 && targetx === startx))
+                {
+                    return true;
+                }
+            }
+            break;
+        case "rook":
+            if(targetz === startz || targetx === startx)
+            {
+                return true;
+            }
+            break;
+        case "bishop":
+            if(Math.abs(targetz - startz) === Math.abs(targetx - startx))
+            {
+                return true;
+            }
+            break;
+        case "king":
+            if ((Math.abs(targetz - startz) <= 1) && (Math.abs(targetx - startx) <= 1)) {
+                return true;
+            }
+            break;
+        case "queen":
+            if((targetz === startz || targetx === startx) || (Math.abs(targetz - startz) === Math.abs(targetx - startx)))
+            {
+                return true;
+            }
+        case "knight":
+            if((Math.abs(targetx - startx) === 2 && Math.abs(targetz - startz) === 1) || (Math.abs(targetx - startx) === 1 && Math.abs(targetz - startz) === 2)) 
+            {
+            return true;
+            }
+        
+    }
+
+
+}
+
 scene.onPointerDown = (evt, pickResult) => {
     if (selectedPiece) {
         const pickedTile = pickResult.pickedMesh;
+        console.log(selectedPiece.position.z, pickedTile.position.z)
         if (pickedTile && pickedTile.name.startsWith("tile")) {
-            selectedPiece.position.x = pickedTile.position.x;
-            selectedPiece.position.z = pickedTile.position.z;
-            console.log("deselecting piece")
-            selectedPiece = null;
-            turn = turn === "white" ? "black" : "white";
-            console.log(selectedPiece);
+            if(ValidMove(selectedPiece, pickedTile))
+            {
+                selectedPiece.position.x = pickedTile.position.x;
+                selectedPiece.position.z = pickedTile.position.z;
+                console.log("deselecting piece")
+                selectedPiece = null;
+                turn = turn === "white" ? "black" : "white";
+                console.log(selectedPiece);
+            }
         }
     }
 };
