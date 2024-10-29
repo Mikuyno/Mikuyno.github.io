@@ -109,6 +109,14 @@ pieces.push(createPiece("king", new BABYLON.Vector3(0.5, 0.5, -3.5), new BABYLON
 
 let selectedPiece = null;
 
+const getTile = (x, z) => {
+    const tileName = `tile${x + 3.5}_${z + 3.5}`; 
+    const tile = scene.getMeshByName(tileName); 
+
+    return tile || null; 
+};
+
+
 const getPiece = (selected_tile) => {
     for(let piece of pieces){
         if(piece.position.x === selected_tile.position.x && piece.position.z === selected_tile.position.z)
@@ -117,6 +125,27 @@ const getPiece = (selected_tile) => {
         }
     }
     return null;
+}
+
+const pathCheck = (startx, startz, targetx, targetz) =>
+{
+    const zDir = Math.sign(targetz - startz);
+    const xDir = Math.sign(targetx - startx);
+
+    currentz = startz + zDir;
+    currentx = startx + xDir;
+
+    while(currentx !== targetx || currentz !== targetz)
+    {
+        const tile = getTile(currentx, currentz);
+        if(tile && getPiece(tile))
+        {
+            return false;
+        }
+        currentx += xDir;
+        currentz += zDir;
+    }
+    return true;
 }
 
 
@@ -139,14 +168,14 @@ const ValidMove = (piece, selected_tile) => {
         case "pawn":
             if (piece.colorName === "white")
             {
-                if ((targetz === startz - 1 && targetx === startx) || (startz === 2.5 && targetz === startz - 2 && targetx === startx)) 
+                if ((targetz === startz - 1 && targetx === startx) || (startz === 2.5 && targetz === startz - 2 && targetx === startx && pathCheck(startx,startz,targetx,targetz))) 
                 {
                     return true;
                 }
             }
             else if (piece.colorName === "black")
             {
-                if((targetz === startz + 1 && targetx === startx) || (startz === -2.5 && targetz === startz + 2 && targetx === startx))
+                if((targetz === startz + 1 && targetx === startx) || (startz === -2.5 && targetz === startz + 2 && targetx === startx && pathCheck(startx,startz,targetx,targetz)))
                 {
                     return true;
                 }
@@ -155,13 +184,13 @@ const ValidMove = (piece, selected_tile) => {
         case "rook":
             if(targetz === startz || targetx === startx)
             {
-                return true;
+                return pathCheck(startx,startz,targetx,targetz);
             }
             break;
         case "bishop":
-            if(Math.abs(targetz - startz) === Math.abs(targetx - startx))
+            if((Math.abs(targetz - startz) === Math.abs(targetx - startx)))
             {
-                return true;
+                return pathCheck(startx,startz,targetx,targetz);
             }
             break;
         case "king":
@@ -172,8 +201,9 @@ const ValidMove = (piece, selected_tile) => {
         case "queen":
             if((targetz === startz || targetx === startx) || (Math.abs(targetz - startz) === Math.abs(targetx - startx)))
             {
-                return true;
+                return pathCheck(startx,startz,targetx,targetz);
             }
+            break;
         case "knight":
             if((Math.abs(targetx - startx) === 2 && Math.abs(targetz - startz) === 1) || (Math.abs(targetx - startx) === 1 && Math.abs(targetz - startz) === 2)) 
             {
