@@ -162,6 +162,14 @@ const ValidMove = (piece, selected_tile) => {
         {
             return false;
         }
+        else if(piece.name != "pawn")
+        {
+            targetPiece.dispose();
+            const index = pieces.indexOf(targetPiece);
+            if (index > -1) {
+                pieces.splice(index, 1); 
+            }
+        }
     }
 
     switch(piece.name){
@@ -170,15 +178,44 @@ const ValidMove = (piece, selected_tile) => {
             {
                 if ((targetz === startz - 1 && targetx === startx) || (startz === 2.5 && targetz === startz - 2 && targetx === startx && pathCheck(startx,startz,targetx,targetz))) 
                 {
-                    return true;
+                    if(!targetPiece)
+                    {
+                        return true;
+                    }
+
+                }
+                else if(targetz === startz - 1 && Math.abs(targetx - startx) === 1)
+                {
+                    if (targetPiece && targetPiece.colorName === "black") {
+                        targetPiece.dispose();
+                        const index = pieces.indexOf(targetPiece);
+                        if (index > -1) {
+                            pieces.splice(index, 1); 
+                        }
+                        return true;
+                    }
                 }
             }
             else if (piece.colorName === "black")
             {
                 if((targetz === startz + 1 && targetx === startx) || (startz === -2.5 && targetz === startz + 2 && targetx === startx && pathCheck(startx,startz,targetx,targetz)))
                 {
-                    return true;
+                    if(!targetPiece)
+                        {
+                            return true;
+                        }
                 }
+                else if(targetz === startz + 1 && Math.abs(targetx - startx) === 1)
+                    {
+                        if (targetPiece && targetPiece.colorName === "white") {
+                            targetPiece.dispose();
+                            const index = pieces.indexOf(targetPiece);
+                            if (index > -1) {
+                                pieces.splice(index, 1); 
+                            }
+                            return true;
+                        }
+                    }
             }
             break;
         case "rook":
