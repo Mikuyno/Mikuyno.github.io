@@ -130,7 +130,7 @@ const getPiece = (selected_tile) => {
 const pathCheck = (startx, startz, targetx, targetz) =>
 {
     const zDir = Math.sign(targetz - startz);
-    const xDir = Math.sign(targetx - startx);
+    const xDir = Math.sign(targetx - startx); 
 
     currentz = startz + zDir;
     currentx = startx + xDir;
@@ -164,13 +164,19 @@ const ValidMove = (piece, selected_tile) => {
         }
         else if(piece.name != "pawn")
         {
+            if(targetPiece.name === "king")
+            {
+                alert(`${piece.colorName} Wins`)
+            }
             targetPiece.dispose();
             const index = pieces.indexOf(targetPiece);
             if (index > -1) {
                 pieces.splice(index, 1); 
             }
         }
+
     }
+    
 
     switch(piece.name){
         case "pawn":
@@ -187,6 +193,10 @@ const ValidMove = (piece, selected_tile) => {
                 else if(targetz === startz - 1 && Math.abs(targetx - startx) === 1)
                 {
                     if (targetPiece && targetPiece.colorName === "black") {
+                        if(targetPiece.name === "king")
+                            {
+                                alert(`${piece.colorName} Wins`)
+                            }
                         targetPiece.dispose();
                         const index = pieces.indexOf(targetPiece);
                         if (index > -1) {
@@ -208,6 +218,10 @@ const ValidMove = (piece, selected_tile) => {
                 else if(targetz === startz + 1 && Math.abs(targetx - startx) === 1)
                     {
                         if (targetPiece && targetPiece.colorName === "white") {
+                            if(targetPiece.name === "king")
+                                {
+                                    alert(`${piece.colorName} Wins`)
+                                }
                             targetPiece.dispose();
                             const index = pieces.indexOf(targetPiece);
                             if (index > -1) {
@@ -249,8 +263,8 @@ const ValidMove = (piece, selected_tile) => {
         
     }
 
-
 }
+
 
 scene.onPointerDown = (evt, pickResult) => {
     if (selectedPiece) {
