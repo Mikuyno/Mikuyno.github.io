@@ -37,7 +37,7 @@ const createPiece = (name, position, color, colorName) => {
         case "pawn":
             const pawnbase = BABYLON.MeshBuilder.CreateCylinder('pawnBase', { diameter: 1.5, height: 0.5 }, scene);
             const pawnbody = BABYLON.MeshBuilder.CreateSphere('pawnBody', { diameter: 1.5 }, scene);
-            pawnbody.position.y = 1.5;
+            pawnbody.position.y = 1;
             
             piece = BABYLON.CSG.FromMesh(pawnbase)
                 .union(BABYLON.CSG.FromMesh(pawnbody))
@@ -61,9 +61,10 @@ const createPiece = (name, position, color, colorName) => {
             break;
         case "knight":
             const knightbase = BABYLON.MeshBuilder.CreateCylinder('knightBase', { diameter: 2, height: 0.5 }, scene);
-            const knightbody = BABYLON.MeshBuilder.CreateTorus('knightBody', { diameter: 1.5, thickness: 0.3 }, scene);
+            const knightbody = BABYLON.MeshBuilder.CreateTorus('knightBody', { diameter: 1.5, thickness: 1 }, scene);
             const knighthead = BABYLON.MeshBuilder.CreateSphere('knightHead', { diameter: 1.2 }, scene);
             knighthead.position.y = 1.5;
+            knightbody.position.y = 0.8;
 
 
             piece = BABYLON.CSG.FromMesh(knightbase)
