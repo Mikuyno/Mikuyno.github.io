@@ -35,27 +35,100 @@ const createPiece = (name, position, color, colorName) => {
     let piece;
     switch (name) {
         case "pawn":
-            piece = BABYLON.MeshBuilder.CreateSphere(name, {diameter: 0.5}, scene);
+            const pawnbase = BABYLON.MeshBuilder.CreateCylinder('pawnBase', { diameter: 1.5, height: 0.5 }, scene);
+            const pawnbody = BABYLON.MeshBuilder.CreateSphere('pawnBody', { diameter: 1.5 }, scene);
+            pawnbody.position.y = 1.5;
+            
+            piece = BABYLON.CSG.FromMesh(pawnbase)
+                .union(BABYLON.CSG.FromMesh(pawnbody))
+                .toMesh('pawn', null, scene);
+            
+            pawnbase.dispose();
+            pawnbody.dispose();
             break;
         case "rook":
-            piece = BABYLON.MeshBuilder.CreateBox(name, {size: 0.5}, scene);
+            const rookbase = BABYLON.MeshBuilder.CreateCylinder('base', { diameter: 2, height: 0.5 }, scene);
+            const rookbody = BABYLON.MeshBuilder.CreateCylinder('body', { diameter: 1.5, height: 3 }, scene);
+            rookbody.position.y = 1.75;
+            const rooktop = BABYLON.MeshBuilder.CreateCylinder('top', { diameter: 1.7, height: 0.5 }, scene);
+            rooktop.position.y = 3.25;
+
+            piece = BABYLON.CSG.FromMesh(rookbase).union(BABYLON.CSG.FromMesh(rookbody)).union(BABYLON.CSG.FromMesh(rooktop)).toMesh('rook', null, scene);
+
+            rookbase.dispose();
+            rookbody.dispose();
+            rooktop.dispose();
             break;
         case "knight":
-            piece = BABYLON.MeshBuilder.CreateCylinder(name, {diameter: 0.5, height: 1}, scene);
+            const knightbase = BABYLON.MeshBuilder.CreateCylinder('knightBase', { diameter: 2, height: 0.5 }, scene);
+            const knightbody = BABYLON.MeshBuilder.CreateTorus('knightBody', { diameter: 1.5, thickness: 0.3 }, scene);
+            const knighthead = BABYLON.MeshBuilder.CreateSphere('knightHead', { diameter: 1.2 }, scene);
+            knighthead.position.y = 1.5;
+
+
+            piece = BABYLON.CSG.FromMesh(knightbase)
+                .union(BABYLON.CSG.FromMesh(knightbody))
+                .union(BABYLON.CSG.FromMesh(knighthead))
+                .toMesh('knight', null, scene);
+
+
+            knightbase.dispose();
+            knightbody.dispose();
+            knighthead.dispose();
             break;
         case "bishop":
-            piece = BABYLON.MeshBuilder.CreateTorus(name, {diameter: 0.5, thickness: 0.15}, scene);
+            const bishopbase = BABYLON.MeshBuilder.CreateCylinder('bishopBase', { diameter: 1, height: 0.5 }, scene);
+            const bishopbody = BABYLON.MeshBuilder.CreateCylinder('bishopBody', { diameter: 1, height: 2, tessellation: 4 }, scene);
+            bishopbody.position.y = 1.5;
+
+  
+            piece = BABYLON.CSG.FromMesh(bishopbase)
+                .union(BABYLON.CSG.FromMesh(bishopbody))
+                .toMesh('bishop', null, scene);
+
+
+            bishopbase.dispose();
+            bishopbody.dispose();
+
             break;
         case "queen":
-            piece = BABYLON.MeshBuilder.CreateCylinder(name, {diameter: 0.6, height: 1.2}, scene);
+            const queenbase = BABYLON.MeshBuilder.CreateCylinder('queenBase', { diameter: 2, height: 0.5 }, scene);
+            const queenbody = BABYLON.MeshBuilder.CreateCylinder('queenBody', { diameter: 1.5, height: 3 }, scene);
+            queenbody.position.y = 1.75;
+            const queencrown = BABYLON.MeshBuilder.CreateTorus('queenCrown', { diameter: 1.7, thickness: 0.3 }, scene);
+            queencrown.position.y = 3.25;
+
+            piece = BABYLON.CSG.FromMesh(queenbase)
+                .union(BABYLON.CSG.FromMesh(queenbody))
+                .union(BABYLON.CSG.FromMesh(queencrown))
+                .toMesh('queen', null, scene);
+
+            queenbase.dispose();
+            queenbody.dispose();
+            queencrown.dispose();
+
             break;
         case "king":
-            piece = BABYLON.MeshBuilder.CreateCylinder(name, {diameter: 0.6, height: 1.3}, scene);
+            const kingbase = BABYLON.MeshBuilder.CreateCylinder('kingBase', { diameter: 2, height: 0.5 }, scene);
+            const kingbody = BABYLON.MeshBuilder.CreateCylinder('kingBody', { diameter: 1.5, height: 3 }, scene);
+            kingbody.position.y = 1.75;
+            const kingcross = BABYLON.MeshBuilder.CreateBox('kingCross', { size: 0.5 }, scene);
+            kingcross.position.y = 3.25;
+            
+            piece = BABYLON.CSG.FromMesh(kingbase)
+                .union(BABYLON.CSG.FromMesh(kingbody))
+                .union(BABYLON.CSG.FromMesh(kingcross))
+                .toMesh('king', null, scene);
+            
+            kingbase.dispose();
+            kingbody.dispose();
+            kingcross.dispose();
             break;
         default:
             piece = BABYLON.MeshBuilder.CreateBox(name, {size: 0.5}, scene);
     }
 
+    piece.scaling = new BABYLON.Vector3(0.4,0.4,0.4)
     piece.position = position;
     const pieceMaterial = new BABYLON.StandardMaterial(name + "Mat", scene);
     pieceMaterial.diffuseColor = color;
