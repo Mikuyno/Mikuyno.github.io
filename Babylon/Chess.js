@@ -138,7 +138,7 @@ const createPiece = (name, position, color, colorName) => {
 
     piece.actionManager = new BABYLON.ActionManager(scene);
     piece.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, () => {
-        if(piece.colorName === turn)
+        if(turn && piece.colorName === turn )
         {
             selectedPiece = piece;
         }
@@ -235,19 +235,6 @@ const ValidMove = (piece, selected_tile) => {
         {
             return false;
         }
-        else if(piece.name != "pawn")
-        {
-            if(targetPiece.name === "king")
-            {
-                alert(`${piece.colorName} Wins`)
-            }
-            targetPiece.dispose();
-            const index = pieces.indexOf(targetPiece);
-            if (index > -1) {
-                pieces.splice(index, 1); 
-            }
-        }
-
     }
     
 
@@ -265,16 +252,8 @@ const ValidMove = (piece, selected_tile) => {
                 }
                 else if(targetz === startz - 1 && Math.abs(targetx - startx) === 1)
                 {
-                    if (targetPiece && targetPiece.colorName === "black") {
-                        if(targetPiece.name === "king")
-                            {
-                                alert(`${piece.colorName} Wins`)
-                            }
-                        targetPiece.dispose();
-                        const index = pieces.indexOf(targetPiece);
-                        if (index > -1) {
-                            pieces.splice(index, 1); 
-                        }
+                    if (targetPiece)
+                    {
                         return true;
                     }
                 }
@@ -290,16 +269,7 @@ const ValidMove = (piece, selected_tile) => {
                 }
                 else if(targetz === startz + 1 && Math.abs(targetx - startx) === 1)
                     {
-                        if (targetPiece && targetPiece.colorName === "white") {
-                            if(targetPiece.name === "king")
-                                {
-                                    alert(`${piece.colorName} Wins`)
-                                }
-                            targetPiece.dispose();
-                            const index = pieces.indexOf(targetPiece);
-                            if (index > -1) {
-                                pieces.splice(index, 1); 
-                            }
+                        if (targetPiece) {
                             return true;
                         }
                     }
@@ -346,12 +316,24 @@ scene.onPointerDown = (evt, pickResult) => {
         if (pickedTile && pickedTile.name.startsWith("tile")) {
             if(ValidMove(selectedPiece, pickedTile))
             {
+                targetPiece = getPiece(pickedTile);
+                turn = turn === "white" ? "black" : "white";
                 selectedPiece.position.x = pickedTile.position.x;
                 selectedPiece.position.z = pickedTile.position.z;
-                console.log("deselecting piece")
+                    if(targetPiece)
+                    {
+                        if(targetPiece.name === "king")
+                        {
+                            alert(`${selectedPiece.colorName} Wins`);
+                            turn = null;
+                        }
+                        targetPiece.dispose();
+                        const index = pieces.indexOf(targetPiece);
+                        if (index > -1) {
+                            pieces.splice(index, 1); 
+                        }
+                    }
                 selectedPiece = null;
-                turn = turn === "white" ? "black" : "white";
-                console.log(selectedPiece);
             }
         }
     }
