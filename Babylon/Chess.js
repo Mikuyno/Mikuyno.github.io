@@ -35,15 +35,19 @@ const createPiece = (name, position, color, colorName) => {
     let piece;
     switch (name) {
         case "pawn":
-            const pawnbase = BABYLON.MeshBuilder.CreateCylinder('pawnBase', { diameter: 1.5, height: 0.5 }, scene);
-            const pawnbody = BABYLON.MeshBuilder.CreateSphere('pawnBody', { diameter: 1.5 }, scene);
-            pawnbody.position.y = 1;
+            const pawnbase = BABYLON.MeshBuilder.CreateCylinder('pawnBase', { diameter: 1.5, height: 0.8 }, scene);
+            const pawntorso = BABYLON.MeshBuilder.CreateCylinder('pawnTorso', { diameter: 0.9, height: 1}, scene);
+            const pawnbody = BABYLON.MeshBuilder.CreateSphere('pawnBody', { diameter: 1.3 }, scene);
+            pawnbody.position.y = 1.2;
+            pawntorso.position.y = 1;
             
             piece = BABYLON.CSG.FromMesh(pawnbase)
+                .union(BABYLON.CSG.FromMesh(pawntorso))
                 .union(BABYLON.CSG.FromMesh(pawnbody))
                 .toMesh('pawn', null, scene);
             
             pawnbase.dispose();
+            pawntorso.dispose();
             pawnbody.dispose();
             break;
         case "rook":
