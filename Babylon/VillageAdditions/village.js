@@ -8,11 +8,12 @@ const createScene = function () {
 
     const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 1.5, Math.PI / 2.2, 15, new BABYLON.Vector3(0, 0, 0));
     camera.attachControl(canvas, true);
+    camera.upperBetaLimit = Math.PI / 2.2;
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
     
 
-    BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "village.glb");
+    BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "valleyvillage.glb");
 
     
     const walk = function (turn, dist) {
@@ -73,29 +74,30 @@ BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", 
     car.position.x = -3;
     car.position.z = 8;
 
-    const animCar = new BABYLON.Animation("carAnimation", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-
-    const carKeys = []; 
-
-    carKeys.push({
-        frame: 0,
-        value: 8
-    });
-
-    carKeys.push({
-        frame: 150,
-        value: -7
-    });
-
-    carKeys.push({
-        frame: 200,
-        value: -7
-    });
-
+    const animCar = new BABYLON.Animation("carAnimation", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+    
+    const carKeys = [
+        { frame: 0, value: new BABYLON.Vector3(-3, 0.16, 8) },  
+        { frame: 50, value: new BABYLON.Vector3(-3, 0.16, 3) }, 
+        { frame: 100, value: new BABYLON.Vector3(-3, 0.16, 3) }, 
+        { frame: 150, value: new BABYLON.Vector3(-3, 0.16, 3) }, 
+        { frame: 200, value: new BABYLON.Vector3(5, 0.16, 1) }  
+    ];
     animCar.setKeys(carKeys);
 
-    car.animations = [];
-    car.animations.push(animCar);
+    //Change 3 car turn
+    const animCarRotation = new BABYLON.Animation("carRotationAnimation", "rotation.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+    const rotationKeys = [
+        { frame: 0, value: 0 },  
+        { frame: 100, value: 0},
+        { frame: 150, value: Math.PI / -2.5 },  
+        { frame: 200, value: Math.PI / -2.5 }
+    ];
+
+    animCarRotation.setKeys(rotationKeys);
+    car.animations = [animCar, animCarRotation];
+    //end change 3
+
 
     scene.beginAnimation(car, 0, 200, true);
   
@@ -110,54 +112,73 @@ BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", 
     scene.beginAnimation(wheelLB, 0, 30, true);
     scene.beginAnimation(wheelLF, 0, 30, true);
 });
+//End Change 1
 
-    // Create the sphere
-var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {
-diameter: 0.5, // diameter of the sphere
-segments: 32, // number of segments
-}, scene);
+//Change 2 Ground
+const groundMat = new BABYLON.StandardMaterial("groundMat");
+groundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/villagegreen.png");
+groundMat.diffuseTexture.hasAlpha = true;
 
-// Position the sphere
-sphere.position = new BABYLON.Vector3(0, 0, 6);
-var material = new BABYLON.StandardMaterial("material", scene); 
-material.diffuseColor = new BABYLON.Color3(1, 0.5, 0.5); // red color // Create red material
-sphere.material = material;// Assign material to sphere
+const ground = BABYLON.MeshBuilder.CreateGround("ground", {width:24, height:24});
+ground.material = groundMat;
 
-    // Define sphere properties
-var sphereProperties = {
-diameter: 2,
-segments: 32,
-};
+const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
+largeGroundMat.diffuseTexture = new BABYLON.Texture("https://assets.babylonjs.com/environments/valleygrass.png");
 
-// Define materials
-var materials = [
-new BABYLON.StandardMaterial("material1", scene),
-new BABYLON.StandardMaterial("material2", scene),
-new BABYLON.StandardMaterial("material3", scene)
-];
+const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "https://assets.babylonjs.com/environments/villageheightmap.png" /* url to height map */, 
+    {width:150, height:150, subdivisions: 20, minHeight:0, maxHeight: 4});
+largeGround.material = largeGroundMat;
+largeGround.position.y = -0.01;
+//End Change 2
 
-materials[0].diffuseColor = new BABYLON.Color3(1, 0, 0); // Red
-materials[1].diffuseColor = new BABYLON.Color3(0, 1, 0); // Green
-materials[2].diffuseColor = new BABYLON.Color3(0, 0, 1); // Blue
+//Change 4: skybox
+const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:150}, scene);
+const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+skyboxMaterial.backFaceCulling = false;
+skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("backgroundSkybox.dds", scene);
+skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+skybox.material = skyboxMaterial;
+    //End change 4
 
-// Define positions
-var positions = [
-new BABYLON.Vector3(0, 0, 0),
-new BABYLON.Vector3(0, 2, 0),
-new BABYLON.Vector3(2, 0, 0)
-];
+//Change 5: Rain
+var particleSystem = new BABYLON.ParticleSystem("particles", 5000, scene);
 
-// Create spheres
-for (var i = 0; i < 3; i++) {
-var sphere = BABYLON.MeshBuilder.CreateSphere("sphere" + i, sphereProperties, scene);
-sphere.position = positions[i];
-sphere.material = materials[i];
-}
+particleSystem.particleTexture = new BABYLON.Texture("Rain.png", scene);
+
+particleSystem.emitter = new BABYLON.Vector3(0, 10, 0); // the starting object, the emitter
+particleSystem.minEmitBox = new BABYLON.Vector3(-1, 0, 0); // Starting all from
+particleSystem.maxEmitBox = new BABYLON.Vector3(1, 0, 0); // To...
+
+particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+particleSystem.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+particleSystem.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
+
+particleSystem.minSize = 0.09;
+particleSystem.maxSize = 0.15;
+
+particleSystem.minLifeTime = 2;
+particleSystem.maxLifeTime = 3.5;
+
+particleSystem.emitRate = 1500;
+
+particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
+
+particleSystem.direction1 = new BABYLON.Vector3(-2, 8, 2);
+particleSystem.direction2 = new BABYLON.Vector3(2, 8, -2);
+
+particleSystem.minEmitPower = 1;
+particleSystem.maxEmitPower = 3;
+particleSystem.updateSpeed = 0.025;
+
+particleSystem.start();
+//End Change 5
     
     return scene;
 };
-
-
 
 var scene = createScene();
 
@@ -169,12 +190,3 @@ window.addEventListener("resize", function () {
     engine.resize();
 });
 
-// Function to export as GLB
-function exportToGLB() {
-    BABYLON.GLTF2Export.GLBAsync(scene, "stickman.glb").then((glb) => {
-        glb.downloadFiles();
-    });
-}
-
-// Attach export function to the download button
-document.getElementById("downloadButton").addEventListener("click", exportToGLB);
