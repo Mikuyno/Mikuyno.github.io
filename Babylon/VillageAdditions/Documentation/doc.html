@@ -7,13 +7,13 @@
 </head>
 <body>
     <h3>Starter Code:</h3>
-    <p>First off the starter code starts by creating the scene in the placeholder html canvas object and establishes the Babylon engine. Furthermore, the scene where all objects will be stored is declared and within it first we have a camera that orbits around the specified Vector and a light to illuminate the scene. A glb of the village is also here</p>
+    <p>First off the starter code starts by creating the scene in the placeholder html canvas object and establishes the Babylon engine. Furthermore, the scene where all objects will be stored is declared and within it first we have a camera that orbits around the specified Vector and a light to illuminate the scene. A glb of the village is also here Imported from babylon assets</p>
     <img src="StarterCreate.png">
-    <p>Then the "dude" object is introduced. Firstly, the dude has a specified "walk" array that specifies how much the dude should rotate and how far he should go as the function suggests for his walking cycle. Furthermore, the dude mesh is imported and given an initial position and rotation. Furthermore, the animation within the .babylon file is begun playing from frames 0-100 then looping. Then the variables for the distance, step length, and path are made. </p>
+    <p>Then the "dude" object is introduced. Firstly, the dude has a specified "walk" array that specifies how much the dude should rotate and how far he should go as the function suggests for his walking cycle. Furthermore, the dude babylon file is imported from local files and given an initial position and rotation. Furthermore, the animation within the .babylon file is begun playing from frames 0-100 then looping. Then the variables for the distance, step length, and path are made. </p>
     <img src="StarterWalkandDude1.png">
     <p>The rest of the Dude object is just using those variables and the predefined track to define where the dude will move. dude.movePOV takes the step variable and moves the dude forward, the distance variable is used to track how far the dude has walked, and the p variable is used for the track array every time the dude walks a defined distance to rotate the dude by what is defined in track and then increment the p variable to the next array entry. The p variable loops back with %</p>
     <img src="StarterDude2.png">
-    <p>Then, some additional meshes are imported being a bunny and a troll. Then starts the creation of a few sphere objects, 1 sphere is small and positioned off to the side behind the village buildings.</p>
+    <p>Then, some additional meshes are imported being a bunny and a troll both also local files. Then starts the creation of a few sphere objects, 1 sphere is small and positioned off to the side behind the village buildings.</p>
     <img src="StarterTrollBunnySphere.png">
     <p>Then, three more bigger spheres are created, 1 blue, 1 red, 1 green. They are all positioned close to the middle with the red one being right in the middle while the blue sphere is on the x axis and the green sphere is on the y axis. Each is given a standard material</p>
     <img src="StarterSphere2.png">
