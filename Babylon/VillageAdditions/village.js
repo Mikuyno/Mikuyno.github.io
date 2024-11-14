@@ -101,7 +101,6 @@ BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", 
 
     scene.beginAnimation(car, 0, 200, true);
   
-    //wheel animation
     const wheelRB = scene.getMeshByName("wheelRB");
     const wheelRF = scene.getMeshByName("wheelRF");
     const wheelLB = scene.getMeshByName("wheelLB");
